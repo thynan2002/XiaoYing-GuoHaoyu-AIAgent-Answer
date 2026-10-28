@@ -1,0 +1,93 @@
+"""成本与素材工具的单测：费用公式必须能被独立复算。"""
+
+from __future__ import annotations
+
+import pytest
+
+from conftest import ToolRegistry, load
+from src import config
+from src.tools import compute_cost
+
+ROOT_COSTS = config.load_costs()
+
+
+class TestCostFormula:
+    def test_variant_totals_are_12_8_5(self):
+        assert compute_cost("full")["total"] == 12.0
+        assert compute_cost("lite")["total"] == 8.0
+        assert compute_cost("micro")["total"] == 5.0
+
+    @pytest.mark.parametrize("vid", ["full", "lite", "micro"])
+    def test_breakdown_sums_to_total(self, vid):
+        est = compute_cost(vid)
+        assert round(sum(b["amount"] for b in est["breakdown"]), 2) == est["total"]
+
+    def test_manual_recompute_matches(self):
+        """按单价表手算一遍，和工具结果对齐（防止公式实现漂移）。"""
+        u = ROOT_COSTS["unit_costs"]
+        spec = ROOT_COSTS["variants"]["full"]
+        manual = (u["material_license"]["per_item"] * spec["material_items"]
+                  + u["script"]["base"] + u["script"]["per_30s"] * 2
+                  + u["voice"]["base"] + u["voice"]["per_30s"] * 2
+                  + u["edit"]["base"] + u["edit"]["per_shot"] * spec["shots"]
+                  + u["review"]["flat"])
+        assert round(manual, 2) == compute_cost("full")["total"]
+
+    def test_fewer_materials_is_cheaper(self):
+        full4 = compute_cost("full")["total"]
+        full2 = compute_cost("full", item_count=2)["total"]
+        assert full2 < full4
+        assert round(full4 - full2, 2) == round(2 * 0.6, 2)
+
+    def test_unknown_variant_raises(self):
+        from src.tools import ToolError
+        with pytest.raises(ToolError):
+            compute_cost("does-not-exist")
+
+
+class TestMaterialSearch:
+    def test_search_returns_hits_and_marks_requested(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        obs = reg.call("search_materials", {"queries": ["校园", "咖啡"], "limit": 3})
+        assert obs.status in ("ok", "partial")
+        assert obs.data["requested"] == 3
+        assert obs.data["returned"] == len(obs.data["items"]) >= 1
+        assert all({"id", "title", "tags"} <= set(m) for m in obs.data["items"])
+
+    def test_empty_queries_is_business_error(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        obs = reg.call("search_materials", {"queries": [], "limit": 2})
+        assert obs.status == "error"
+        assert "queries" in obs.error
+
+    def test_no_hit_is_partial_not_crash(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        obs = reg.call("search_materials", {"queries": ["不存在的标签xyz"], "limit": 2})
+        assert obs.status == "partial"
+        assert obs.data["returned"] == 0
+
+
+class TestSavePlanGuard:
+    def test_rejects_cost_mismatch(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        reg.call("search_materials", {"queries": ["校园"], "limit": 2})
+        obs = reg.call("save_plan", {
+            "topic": "t", "variant_id": "lite", "material_ids": ["m003", "m014"],
+            "cost_total": 3.0, "script": {"title": "x"}})
+        assert obs.status == "error"
+        assert "费用不一致" in obs.error
+        assert list(tmp_path.glob("*.json")) == []
+
+    def test_same_content_is_idempotent(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        args = {"topic": "t", "variant_id": "micro", "material_ids": ["m003"],
+                "cost_total": compute_cost("micro", 1)["total"], "script": {"title": "x"}}
+        first = reg.call("save_plan", args)
+        second = reg.call("save_plan", args)
+        assert first.status == second.status == "ok"
+        assert first.data["deduped"] is False
+        assert second.data["deduped"] is True
+        assert first.data["plan_id"] == second.data["plan_id"]
+        assert len(list(tmp_path.glob("*.json"))) == 1
+        saved = load(tmp_path / f"{first.data['plan_id']}.json")
+        assert saved["cost_total"] == args["cost_total"]

@@ -1,0 +1,65 @@
+{
+  "currency": "模拟单位",
+  "note": "费用全部为合成数据，单位是「模拟单位」，不对应人民币。公式见 docs/02-solution.md 第 4 节。",
+  "unit_costs": {
+    "material_license": {
+      "label": "素材授权",
+      "per_item": 0.6
+    },
+    "script": {
+      "label": "脚本撰写",
+      "base": 1.0,
+      "per_30s": 1.0
+    },
+    "voice": {
+      "label": "配音",
+      "base": 0.5,
+      "per_30s": 0.6
+    },
+    "edit": {
+      "label": "剪辑合成",
+      "base": 2.0,
+      "per_shot": 0.4
+    },
+    "review": {
+      "label": "内容审核",
+      "flat": 0.5
+    }
+  },
+  "tool_time": {
+    "script_gen_seconds": 45,
+    "per_shot_render_seconds": 60,
+    "review_seconds": 30,
+    "hour_buffer_minutes": 20
+  },
+  "variants": {
+    "full": {
+      "label": "完整版",
+      "duration_s": 60,
+      "material_items": 4,
+      "shots": 6,
+      "voice": true,
+      "review": true,
+      "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事"
+    },
+    "lite": {
+      "label": "精简版",
+      "duration_s": 30,
+      "material_items": 2,
+      "shots": 3,
+      "voice": true,
+      "review": true,
+      "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头"
+    },
+    "micro": {
+      "label": "极简版",
+      "duration_s": 15,
+      "material_items": 1,
+      "shots": 1,
+      "voice": false,
+      "review": false,
+      "summary": "1 条素材 + 15 秒单镜头，无配音免审核"
+    }
+  },
+  "preference_order": ["full", "lite", "micro"]
+}
