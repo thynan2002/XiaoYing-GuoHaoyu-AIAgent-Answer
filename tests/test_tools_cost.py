@@ -91,3 +91,73 @@ class TestSavePlanGuard:
         assert len(list(tmp_path.glob("*.json"))) == 1
         saved = load(tmp_path / f"{first.data['plan_id']}.json")
         assert saved["cost_total"] == args["cost_total"]
+
+
+class TestTaskPlanOutline:
+    """outline 是题目要求的"任务计划"：工序、工时、归属费用必须自洽。"""
+
+    @pytest.mark.parametrize("vid", ["full", "lite", "micro"])
+    def test_outline_sums_match_estimate(self, vid):
+        est = compute_cost(vid)
+        assert round(sum(o["cost"] for o in est["outline"]), 2) == est["total"]
+        seconds = sum(o["seconds"] for o in est["outline"])
+        import math
+        assert math.ceil(seconds / 60) == est["estimated_minutes"]   # 工时口径一致
+        assert [o["no"] for o in est["outline"]] == [1, 2, 3, 4]
+
+    def test_micro_has_no_review_stage(self):
+        stages = {o["task"]: o for o in compute_cost("micro")["outline"]}
+        assert stages["内容审核"]["seconds"] == 0
+        assert stages["内容审核"]["cost"] == 0
+
+
+class TestLongQueryRetrieval:
+    """运营给的是一整句主题，不是关键词；检索不能因此 0 命中。"""
+
+    def test_full_sentence_query_hits(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        obs = reg.call("search_materials",
+                       {"queries": ["秋季校园咖啡新品推广"], "limit": 2})
+        assert obs.data["returned"] >= 1
+        assert any("咖啡" in m["title"] or "校园" in m["title"] for m in obs.data["items"])
+
+    def test_noise_query_still_returns_nothing(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        obs = reg.call("search_materials", {"queries": ["量子计算芯片封装"], "limit": 2})
+        assert obs.data["returned"] == 0
+        assert obs.status == "partial"
+
+
+class TestTaskPlanOutline:
+    """outline 是题目要求的"任务计划"：工序、工时、归属费用必须自洽。"""
+
+    @pytest.mark.parametrize("vid", ["full", "lite", "micro"])
+    def test_outline_sums_match_estimate(self, vid):
+        est = compute_cost(vid)
+        assert round(sum(o["cost"] for o in est["outline"]), 2) == est["total"]
+        seconds = sum(o["seconds"] for o in est["outline"])
+        import math
+        assert math.ceil(seconds / 60) == est["estimated_minutes"]   # 工时口径一致
+        assert [o["no"] for o in est["outline"]] == [1, 2, 3, 4]
+
+    def test_micro_has_no_review_stage(self):
+        stages = {o["task"]: o for o in compute_cost("micro")["outline"]}
+        assert stages["内容审核"]["seconds"] == 0
+        assert stages["内容审核"]["cost"] == 0
+
+
+class TestLongQueryRetrieval:
+    """运营给的是一整句主题，不是关键词；检索不能因此 0 命中。"""
+
+    def test_full_sentence_query_hits(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        obs = reg.call("search_materials",
+                       {"queries": ["秋季校园咖啡新品推广"], "limit": 2})
+        assert obs.data["returned"] >= 1
+        assert any("咖啡" in m["title"] or "校园" in m["title"] for m in obs.data["items"])
+
+    def test_noise_query_still_returns_nothing(self, tmp_path):
+        reg = ToolRegistry(plan_dir=tmp_path)
+        obs = reg.call("search_materials", {"queries": ["量子计算芯片封装"], "limit": 2})
+        assert obs.data["returned"] == 0
+        assert obs.status == "partial"

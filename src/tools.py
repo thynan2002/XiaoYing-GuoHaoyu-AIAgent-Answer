@@ -76,6 +76,26 @@ def compute_cost(variant_id: str, item_count: int | None = None) -> dict[str, An
                + 15)
     minutes = math.ceil(seconds / 60)
 
+    # 工序清单 = 题目要求的"任务计划"：每道工序的预计工时 + 归属费用项，
+    # 各工序秒数之和必须等于上面的 seconds，各工序费用之和必须等于 total。
+    stage_seconds = [
+        ("素材检索与授权", items * tt["per_shot_render_seconds"], ["素材授权"]),
+        ("脚本撰写（含配音文案）", tt["script_gen_seconds"], ["脚本撰写", "配音"]),
+        ("剪辑合成（含配音合成）", spec["shots"] * tt["per_shot_render_seconds"] + 15, ["剪辑合成"]),
+        ("内容审核", tt["review_seconds"] if spec["review"] else 0, ["内容审核"]),
+    ]
+    by_item = {b["item"]: b["amount"] for b in breakdown}
+    outline = []
+    for no, (task, secs, cost_items) in enumerate(stage_seconds, start=1):
+        outline.append({
+            "no": no,
+            "task": task,
+            "seconds": secs,
+            "minutes": round(secs / 60, 1),
+            "cost_items": cost_items,
+            "cost": round(sum(by_item.get(c, 0.0) for c in cost_items), 2),
+        })
+
     return {
         "variant_id": variant_id,
         "label": spec["label"],
@@ -85,6 +105,7 @@ def compute_cost(variant_id: str, item_count: int | None = None) -> dict[str, An
         "voice": spec["voice"],
         "review": spec["review"],
         "breakdown": breakdown,
+        "outline": outline,
         "total": total,
         "currency": costs["currency"],
         "estimated_minutes": minutes,
@@ -243,9 +264,7 @@ class ToolRegistry:
         pool = config.load_materials()["materials"]
         scored: list[tuple[int, dict]] = []
         for m in pool:
-            hay = (m["title"] + " " + " ".join(m["tags"])).lower()
-            score = sum(3 if q.lower() in m["title"].lower() else
-                        (1 if q.lower() in hay else 0) for q in queries)
+            score = sum(self._score(q, m) for q in queries)
             if score:
                 scored.append((score, m))
         scored.sort(key=lambda x: (-x[0], x[1]["id"]))
@@ -261,6 +280,28 @@ class ToolRegistry:
                    "、".join(m["title"] for m in hits))
         return ({"items": hits, "requested": int(limit), "returned": len(hits),
                  "degraded": degraded, "queries": queries}, summary, status)
+
+    @staticmethod
+    def _score(query: str, material: dict) -> int:
+        """短 query 直接子串匹配；长 query（整句主题）按字符二元组打分。
+
+        真实运营给的往往是一整句主题，而不是关键词；只做子串匹配会 0 命中，
+        但直接交给模型分词又不该是工具的事。用 bigram 近似，既不需要分词器，
+        又能让"秋季校园咖啡新品推广"命中"校园/咖啡"这类素材。
+        """
+        q = query.lower().strip()
+        title = material["title"].lower()
+        hay = title + " " + " ".join(material["tags"]).lower()
+        if len(q) <= 4:
+            return 3 if q in title else (1 if q in hay else 0)
+        grams = {q[i:i + 2] for i in range(len(q) - 1)}
+        if not grams:
+            return 0
+        hit_title = sum(1 for g in grams if g in title)
+        hit_hay = sum(1 for g in grams if g in hay)
+        # 命中标题算 2 分，只命中标签算 1 分；低于 2 分视为噪声
+        score = hit_title * 2 + (hit_hay - hit_title)
+        return score if score >= 2 else 0
 
     def _tool_estimate_cost(self, variant_id: str = "", material_ids: list[str] | None = None):
         if not variant_id:

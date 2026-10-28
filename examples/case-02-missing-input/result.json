@@ -30,5 +30,17 @@
     "tool_calls": 0,
     "max_tool_calls": 12,
     "elapsed_ms": 1
+  },
+  "steps_brief": [
+    {
+      "step": 1,
+      "action": "request_input",
+      "status": "terminal",
+      "summary": "向运营索要：budget"
+    }
+  ],
+  "resume": {
+    "resumed": false,
+    "from_step": 0
   }
 }

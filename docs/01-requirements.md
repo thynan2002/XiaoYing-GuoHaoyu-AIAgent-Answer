@@ -49,6 +49,8 @@
 | S6 | 重复执行不产生重复方案 | `case-07`（`deduped: true`） |
 | S7 | 达到步数上限返回 `INCOMPLETE_LIMIT` 并说明保留了什么 | `case-08`（3/3） |
 | S8 | 失败步骤在记录里必须是失败，不能算成功 | `tests/test_agent_loop.py::TestToolFailure` |
+| S9 | 交付结果含任务计划、步骤状态、费用合计、方案或未完成原因 | `result.json` 的 `plan.outline` / `steps_brief` |
+| S10 | 失败步骤可从检查点续跑，且不重跑已成功步骤（加分项） | `case-11` → `case-12` |
 
 ## 4. 验收点映射（题目"必须验收" → 证据）
 
@@ -60,7 +62,8 @@
 | 预算超限 | 全档位被否 + 缺口 | `examples/case-06-budget-exceeded/` |
 | 重复执行 | 幂等保存命中 | `examples/case-07-repeated-save/` |
 | 步数上限 | 3 步强行截断 | `examples/case-08-step-limit/` |
-| 加分：失败步骤续跑 | `resume` 从检查点继续 | `case-03`（缺信息续跑）、`src/agent.py` 检查点 |
+| 加分：失败步骤续跑 | 落盘失败 → 续跑只补这一步 | `case-11` → `case-12`（第 9 步直接 save_plan） |
+| 加分：缺信息续跑 | `resume --set budget=10` | `case-02` → `case-03` |
 | 加分：部分成功保留 | 素材 1/4 时重算并交付 | `examples/case-05-partial-materials/` |
 
 ## 5. 输入与数据

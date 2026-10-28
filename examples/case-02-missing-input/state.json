@@ -39,5 +39,6 @@
       "elapsed_ms": 0,
       "follow_up": "等待运营补充信息"
     }
-  ]
+  ],
+  "resumed_from": 0
 }

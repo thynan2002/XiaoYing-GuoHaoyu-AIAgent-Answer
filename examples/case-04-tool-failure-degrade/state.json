@@ -14,6 +14,188 @@
   "step": 11,
   "tool_calls": 10,
   "scratch": {
+    "progress": {
+      "list_plan_variants": {
+        "variants": [
+          {
+            "variant_id": "full",
+            "label": "完整版",
+            "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+            "duration_s": 60,
+            "material_items": 4
+          },
+          {
+            "variant_id": "lite",
+            "label": "精简版",
+            "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+            "duration_s": 30,
+            "material_items": 2
+          },
+          {
+            "variant_id": "micro",
+            "label": "极简版",
+            "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+            "duration_s": 15,
+            "material_items": 1
+          }
+        ]
+      },
+      "estimate_cost": {
+        "variant_id": "lite",
+        "label": "精简版",
+        "duration_s": 30,
+        "material_items": 2,
+        "shots": 3,
+        "voice": true,
+        "review": true,
+        "breakdown": [
+          {
+            "item": "素材授权",
+            "amount": 1.2,
+            "detail": "2 条 × 0.6"
+          },
+          {
+            "item": "脚本撰写",
+            "amount": 2.0,
+            "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+          },
+          {
+            "item": "配音",
+            "amount": 1.1,
+            "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+          },
+          {
+            "item": "剪辑合成",
+            "amount": 3.2,
+            "detail": "基础 2.0 + 3 镜头 × 0.4"
+          },
+          {
+            "item": "内容审核",
+            "amount": 0.5,
+            "detail": "固定审核费"
+          }
+        ],
+        "outline": [
+          {
+            "no": 1,
+            "task": "素材检索与授权",
+            "seconds": 120,
+            "minutes": 2.0,
+            "cost_items": [
+              "素材授权"
+            ],
+            "cost": 1.2
+          },
+          {
+            "no": 2,
+            "task": "脚本撰写（含配音文案）",
+            "seconds": 45,
+            "minutes": 0.8,
+            "cost_items": [
+              "脚本撰写",
+              "配音"
+            ],
+            "cost": 3.1
+          },
+          {
+            "no": 3,
+            "task": "剪辑合成（含配音合成）",
+            "seconds": 195,
+            "minutes": 3.2,
+            "cost_items": [
+              "剪辑合成"
+            ],
+            "cost": 3.2
+          },
+          {
+            "no": 4,
+            "task": "内容审核",
+            "seconds": 30,
+            "minutes": 0.5,
+            "cost_items": [
+              "内容审核"
+            ],
+            "cost": 0.5
+          }
+        ],
+        "total": 8.0,
+        "currency": "模拟单位",
+        "estimated_minutes": 7
+      },
+      "search_materials": {
+        "items": [
+          {
+            "id": "m010",
+            "title": "产品开箱特写",
+            "type": "video",
+            "duration_s": 11,
+            "tags": [
+              "产品",
+              "开箱",
+              "数码",
+              "特写"
+            ]
+          },
+          {
+            "id": "m013",
+            "title": "数码产品细节摇镜",
+            "type": "video",
+            "duration_s": 7,
+            "tags": [
+              "数码",
+              "产品",
+              "细节",
+              "质感"
+            ]
+          }
+        ],
+        "requested": 2,
+        "returned": 2,
+        "degraded": false,
+        "queries": [
+          "数码",
+          "开箱",
+          "双十一数码开箱合集"
+        ]
+      },
+      "generate_script": {
+        "script": {
+          "title": "双十一数码开箱合集｜精简版脚本",
+          "tone": "利落",
+          "duration_s": 30,
+          "shots": [
+            {
+              "shot": 1,
+              "visual": "产品开箱特写",
+              "seconds": 10.0,
+              "voiceover": "用 3 秒把「双十一数码开箱合集」说清楚——从产品开箱特写开始。",
+              "on_screen_text": "双十一数码开箱合集 · 1"
+            },
+            {
+              "shot": 2,
+              "visual": "数码产品细节摇镜",
+              "seconds": 10.0,
+              "voiceover": "第 2 镜头承接数码产品细节摇镜，推进情绪。",
+              "on_screen_text": "双十一数码开箱合集 · 2"
+            },
+            {
+              "shot": 3,
+              "visual": "产品开箱特写",
+              "seconds": 10.0,
+              "voiceover": "收尾落回「双十一数码开箱合集」，一句行动号召。",
+              "on_screen_text": "双十一数码开箱合集 · 3"
+            }
+          ]
+        },
+        "reused": false
+      },
+      "save_plan": {
+        "plan_id": "plan_786a532b33",
+        "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
+        "deduped": false,
+        "saved_at": "2026-10-28 16:05:12"
+      }
+    },
     "queue": [
       "micro"
     ],
@@ -57,6 +239,49 @@
           "detail": "固定审核费"
         }
       ],
+      "outline": [
+        {
+          "no": 1,
+          "task": "素材检索与授权",
+          "seconds": 120,
+          "minutes": 2.0,
+          "cost_items": [
+            "素材授权"
+          ],
+          "cost": 1.2
+        },
+        {
+          "no": 2,
+          "task": "脚本撰写（含配音文案）",
+          "seconds": 45,
+          "minutes": 0.8,
+          "cost_items": [
+            "脚本撰写",
+            "配音"
+          ],
+          "cost": 3.1
+        },
+        {
+          "no": 3,
+          "task": "剪辑合成（含配音合成）",
+          "seconds": 195,
+          "minutes": 3.2,
+          "cost_items": [
+            "剪辑合成"
+          ],
+          "cost": 3.2
+        },
+        {
+          "no": 4,
+          "task": "内容审核",
+          "seconds": 30,
+          "minutes": 0.5,
+          "cost_items": [
+            "内容审核"
+          ],
+          "cost": 0.5
+        }
+      ],
       "total": 8.0,
       "currency": "模拟单位",
       "estimated_minutes": 7
@@ -95,6 +320,49 @@
           "item": "内容审核",
           "amount": 0.5,
           "detail": "固定审核费"
+        }
+      ],
+      "outline": [
+        {
+          "no": 1,
+          "task": "素材检索与授权",
+          "seconds": 120,
+          "minutes": 2.0,
+          "cost_items": [
+            "素材授权"
+          ],
+          "cost": 1.2
+        },
+        {
+          "no": 2,
+          "task": "脚本撰写（含配音文案）",
+          "seconds": 45,
+          "minutes": 0.8,
+          "cost_items": [
+            "脚本撰写",
+            "配音"
+          ],
+          "cost": 3.1
+        },
+        {
+          "no": 3,
+          "task": "剪辑合成（含配音合成）",
+          "seconds": 195,
+          "minutes": 3.2,
+          "cost_items": [
+            "剪辑合成"
+          ],
+          "cost": 3.2
+        },
+        {
+          "no": 4,
+          "task": "内容审核",
+          "seconds": 30,
+          "minutes": 0.5,
+          "cost_items": [
+            "内容审核"
+          ],
+          "cost": 0.5
         }
       ],
       "total": 8.0,
@@ -174,7 +442,7 @@
       "plan_id": "plan_786a532b33",
       "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
       "deduped": false,
-      "saved_at": "2026-10-28 15:41:50"
+      "saved_at": "2026-10-28 16:05:12"
     }
   },
   "status": "COMPLETED",
@@ -264,6 +532,49 @@
               "item": "内容审核",
               "amount": 0.5,
               "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 240,
+              "minutes": 4.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 2.4
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
             }
           ],
           "total": 12.0,
@@ -382,6 +693,49 @@
               "detail": "固定审核费"
             }
           ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 120,
+              "minutes": 2.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 1.2
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
           "total": 10.8,
           "currency": "模拟单位",
           "estimated_minutes": 10
@@ -481,6 +835,49 @@
               "item": "内容审核",
               "amount": 0.5,
               "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 120,
+              "minutes": 2.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 1.2
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 3.1
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 195,
+              "minutes": 3.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 3.2
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
             }
           ],
           "total": 8.0,
@@ -651,12 +1048,12 @@
           "plan_id": "plan_786a532b33",
           "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
           "deduped": false,
-          "saved_at": "2026-10-28 15:41:50"
+          "saved_at": "2026-10-28 16:05:12"
         },
         "error": null,
         "tool": "save_plan"
       },
-      "elapsed_ms": 0,
+      "elapsed_ms": 1,
       "follow_up": "finish"
     },
     {
@@ -675,6 +1072,7 @@
       "follow_up": "结束"
     }
   ],
+  "resumed_from": 0,
   "last_observation": {
     "status": "ok",
     "summary": "方案已保存 plan_786a532b33（8.0 模拟单位）",
@@ -682,9 +1080,11 @@
       "plan_id": "plan_786a532b33",
       "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
       "deduped": false,
-      "saved_at": "2026-10-28 15:41:50"
+      "saved_at": "2026-10-28 16:05:12"
     },
     "error": null,
     "tool": "save_plan"
-  }
+  },
+  "last_action": "save_plan",
+  "chosen_variant": "lite"
 }

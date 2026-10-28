@@ -1,0 +1,216 @@
+{
+  "run_id": "case-11",
+  "planner": "mock-policy",
+  "status": "INCOMPLETE_SAVE",
+  "status_reason": "方案保存失败 2 次：save_plan 返回 503（注入故障）；脚本与费用已保留",
+  "task": {
+    "topic": "校园咖啡快闪店预热",
+    "budget": 10.0,
+    "deadline": "2026-11-04 18:00",
+    "tone": "轻快",
+    "audience": "在校大学生",
+    "notes": "方案服务当天会抖，落盘可能失败；用于验证失败后能否从断点续跑",
+    "available_minutes": 10240.0,
+    "missing_fields": []
+  },
+  "plan": {
+    "variant_id": "lite",
+    "label": "精简版",
+    "cost_total": 8.0,
+    "currency": "模拟单位",
+    "estimated_minutes": 7,
+    "breakdown": [
+      {
+        "item": "素材授权",
+        "amount": 1.2,
+        "detail": "2 条 × 0.6"
+      },
+      {
+        "item": "脚本撰写",
+        "amount": 2.0,
+        "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+      },
+      {
+        "item": "配音",
+        "amount": 1.1,
+        "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+      },
+      {
+        "item": "剪辑合成",
+        "amount": 3.2,
+        "detail": "基础 2.0 + 3 镜头 × 0.4"
+      },
+      {
+        "item": "内容审核",
+        "amount": 0.5,
+        "detail": "固定审核费"
+      }
+    ],
+    "outline": [
+      {
+        "no": 1,
+        "task": "素材检索与授权",
+        "seconds": 120,
+        "minutes": 2.0,
+        "cost_items": [
+          "素材授权"
+        ],
+        "cost": 1.2
+      },
+      {
+        "no": 2,
+        "task": "脚本撰写（含配音文案）",
+        "seconds": 45,
+        "minutes": 0.8,
+        "cost_items": [
+          "脚本撰写",
+          "配音"
+        ],
+        "cost": 3.1
+      },
+      {
+        "no": 3,
+        "task": "剪辑合成（含配音合成）",
+        "seconds": 195,
+        "minutes": 3.2,
+        "cost_items": [
+          "剪辑合成"
+        ],
+        "cost": 3.2
+      },
+      {
+        "no": 4,
+        "task": "内容审核",
+        "seconds": 30,
+        "minutes": 0.5,
+        "cost_items": [
+          "内容审核"
+        ],
+        "cost": 0.5
+      }
+    ],
+    "material_ids": [
+      "m002",
+      "m003"
+    ],
+    "script_title": "校园咖啡快闪店预热｜精简版脚本"
+  },
+  "rejected": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    }
+  ],
+  "last_observation": {
+    "status": "error",
+    "summary": "save_plan 失败：save_plan 返回 503（注入故障）",
+    "data": {},
+    "error": "save_plan 返回 503（注入故障）",
+    "tool": "save_plan"
+  },
+  "saved_plan": null,
+  "artifacts": {
+    "materials": [
+      {
+        "id": "m002",
+        "title": "咖啡店手冲特写"
+      },
+      {
+        "id": "m003",
+        "title": "校园晨跑"
+      }
+    ],
+    "script": {
+      "title": "校园咖啡快闪店预热｜精简版脚本",
+      "tone": "轻快",
+      "duration_s": 30,
+      "shots": [
+        {
+          "shot": 1,
+          "visual": "咖啡店手冲特写",
+          "seconds": 10.0,
+          "voiceover": "用 3 秒把「校园咖啡快闪店预热」说清楚——从咖啡店手冲特写开始。",
+          "on_screen_text": "校园咖啡快闪店预热 · 1"
+        },
+        {
+          "shot": 2,
+          "visual": "校园晨跑",
+          "seconds": 10.0,
+          "voiceover": "第 2 镜头承接校园晨跑，推进情绪。",
+          "on_screen_text": "校园咖啡快闪店预热 · 2"
+        },
+        {
+          "shot": 3,
+          "visual": "咖啡店手冲特写",
+          "seconds": 10.0,
+          "voiceover": "收尾落回「校园咖啡快闪店预热」，一句行动号召。",
+          "on_screen_text": "校园咖啡快闪店预热 · 3"
+        }
+      ]
+    },
+    "script_status": "ok"
+  },
+  "usage": {
+    "steps": 8,
+    "max_steps": 12,
+    "tool_calls": 7,
+    "max_tool_calls": 12,
+    "elapsed_ms": 13
+  },
+  "steps_brief": [
+    {
+      "step": 1,
+      "action": "list_plan_variants",
+      "status": "ok",
+      "summary": "可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)"
+    },
+    {
+      "step": 2,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "完整版估算 12.0 模拟单位，约 12 分钟"
+    },
+    {
+      "step": 3,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "精简版估算 8.0 模拟单位，约 7 分钟"
+    },
+    {
+      "step": 4,
+      "action": "search_materials",
+      "status": "ok",
+      "summary": "命中 2/2 条：咖啡店手冲特写、校园晨跑"
+    },
+    {
+      "step": 5,
+      "action": "generate_script",
+      "status": "ok",
+      "summary": "生成脚本《校园咖啡快闪店预热｜精简版脚本》，3 个镜头"
+    },
+    {
+      "step": 6,
+      "action": "save_plan",
+      "status": "error",
+      "summary": "save_plan 失败：save_plan 返回 503（注入故障）"
+    },
+    {
+      "step": 7,
+      "action": "save_plan",
+      "status": "error",
+      "summary": "save_plan 失败：save_plan 返回 503（注入故障）"
+    },
+    {
+      "step": 8,
+      "action": "finish",
+      "status": "terminal",
+      "summary": "INCOMPLETE_SAVE：方案保存失败 2 次：save_plan 返回 503（注入故障）；脚本与费用已保留"
+    }
+  ],
+  "resume": {
+    "resumed": false,
+    "from_step": 0
+  }
+}

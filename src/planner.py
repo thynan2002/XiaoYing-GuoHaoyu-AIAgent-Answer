@@ -13,6 +13,7 @@ import json
 import math
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
 from typing import Any
@@ -281,7 +282,7 @@ SYSTEM_PROMPT = """你是内容活动方案的执行 Agent，为运营人员在�
 {"action": "<动作名>", "args": {...}, "decision_basis": "<一句话依据，含关键数字>"}
 
 可用动作（工具）：
-{tools}
+{{tools}}
 - request_input({"missing_fields": [...]})：缺少预算/截止时间/主题时，向运营要信息
 - finish({"status": "...", "reason": "..."})：结束。status ∈ COMPLETED / INCOMPLETE_BUDGET /
   INCOMPLETE_TOOL_FAILURE / INCOMPLETE_SAVE / INCOMPLETE_LIMIT
@@ -327,11 +328,13 @@ class LLMPlanner:
             "materials": [m["id"] for m in (ctx.scratch.get("materials") or [])],
             "script_ready": bool(ctx.scratch.get("script")),
             "saved": ctx.scratch.get("saved"),
+            # 每类工具最近一次成功返回（Agent 侧维护，与规划器实现无关）
+            "progress": ctx.scratch.get("progress", {}),
             "last_observation": ctx.last_obs.to_dict() if ctx.last_obs else None,
             "history": history[-5:],
         }
         messages = [
-            {"role": "system", "content": SYSTEM_PROMPT.format(tools=tool_specs_text())},
+            {"role": "system", "content": SYSTEM_PROMPT.replace("{{tools}}", tool_specs_text())},
             {"role": "user", "content": "当前状态：\n" + json.dumps(payload_state, ensure_ascii=False)},
         ]
         content = self._chat(messages)
@@ -352,8 +355,14 @@ class LLMPlanner:
             f"{self.base_url}/chat/completions", data=body,
             headers={"Content-Type": "application/json",
                      "Authorization": f"Bearer {self.api_key}"})
+        # 本地模型服务（ollama / vLLM / 本仓库的兼容端点）不能被系统 http_proxy 劫走
+        host = urllib.parse.urlparse(self.base_url).hostname or ""
+        if host in ("127.0.0.1", "localhost", "::1"):
+            opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        else:
+            opener = urllib.request.build_opener()
         try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+            with opener.open(req, timeout=self.timeout) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             raise PlannerError(f"模型接口 HTTP {e.code}：{e.read()[:300]!r}") from e

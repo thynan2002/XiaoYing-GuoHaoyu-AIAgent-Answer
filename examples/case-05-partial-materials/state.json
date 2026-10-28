@@ -14,6 +14,198 @@
   "step": 7,
   "tool_calls": 6,
   "scratch": {
+    "progress": {
+      "list_plan_variants": {
+        "variants": [
+          {
+            "variant_id": "full",
+            "label": "完整版",
+            "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+            "duration_s": 60,
+            "material_items": 4
+          },
+          {
+            "variant_id": "lite",
+            "label": "精简版",
+            "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+            "duration_s": 30,
+            "material_items": 2
+          },
+          {
+            "variant_id": "micro",
+            "label": "极简版",
+            "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+            "duration_s": 15,
+            "material_items": 1
+          }
+        ]
+      },
+      "estimate_cost": {
+        "variant_id": "full",
+        "label": "完整版",
+        "duration_s": 60,
+        "material_items": 1,
+        "shots": 6,
+        "voice": true,
+        "review": true,
+        "breakdown": [
+          {
+            "item": "素材授权",
+            "amount": 0.6,
+            "detail": "1 条 × 0.6"
+          },
+          {
+            "item": "脚本撰写",
+            "amount": 3.0,
+            "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+          },
+          {
+            "item": "配音",
+            "amount": 1.7,
+            "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+          },
+          {
+            "item": "剪辑合成",
+            "amount": 4.4,
+            "detail": "基础 2.0 + 6 镜头 × 0.4"
+          },
+          {
+            "item": "内容审核",
+            "amount": 0.5,
+            "detail": "固定审核费"
+          }
+        ],
+        "outline": [
+          {
+            "no": 1,
+            "task": "素材检索与授权",
+            "seconds": 60,
+            "minutes": 1.0,
+            "cost_items": [
+              "素材授权"
+            ],
+            "cost": 0.6
+          },
+          {
+            "no": 2,
+            "task": "脚本撰写（含配音文案）",
+            "seconds": 45,
+            "minutes": 0.8,
+            "cost_items": [
+              "脚本撰写",
+              "配音"
+            ],
+            "cost": 4.7
+          },
+          {
+            "no": 3,
+            "task": "剪辑合成（含配音合成）",
+            "seconds": 375,
+            "minutes": 6.2,
+            "cost_items": [
+              "剪辑合成"
+            ],
+            "cost": 4.4
+          },
+          {
+            "no": 4,
+            "task": "内容审核",
+            "seconds": 30,
+            "minutes": 0.5,
+            "cost_items": [
+              "内容审核"
+            ],
+            "cost": 0.5
+          }
+        ],
+        "total": 10.2,
+        "currency": "模拟单位",
+        "estimated_minutes": 9
+      },
+      "search_materials": {
+        "items": [
+          {
+            "id": "m001",
+            "title": "城市夜景延时",
+            "type": "video",
+            "duration_s": 12,
+            "tags": [
+              "城市",
+              "夜景",
+              "延时",
+              "氛围",
+              "开场"
+            ]
+          }
+        ],
+        "requested": 4,
+        "returned": 1,
+        "degraded": true,
+        "queries": [
+          "城市",
+          "城市夜跑社群招募"
+        ],
+        "injected_partial": true
+      },
+      "generate_script": {
+        "script": {
+          "title": "城市夜跑社群招募｜完整版脚本",
+          "tone": "热血",
+          "duration_s": 60,
+          "shots": [
+            {
+              "shot": 1,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "用 3 秒把「城市夜跑社群招募」说清楚——从城市夜景延时开始。",
+              "on_screen_text": "城市夜跑社群招募 · 1"
+            },
+            {
+              "shot": 2,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 2 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 2"
+            },
+            {
+              "shot": 3,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 3 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 3"
+            },
+            {
+              "shot": 4,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 4 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 4"
+            },
+            {
+              "shot": 5,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 5 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 5"
+            },
+            {
+              "shot": 6,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "收尾落回「城市夜跑社群招募」，一句行动号召。",
+              "on_screen_text": "城市夜跑社群招募 · 6"
+            }
+          ]
+        },
+        "reused": false
+      },
+      "save_plan": {
+        "plan_id": "plan_15ed4383c1",
+        "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
+        "deduped": false,
+        "saved_at": "2026-10-28 16:05:13"
+      }
+    },
     "queue": [
       "lite",
       "micro"
@@ -58,6 +250,49 @@
           "detail": "固定审核费"
         }
       ],
+      "outline": [
+        {
+          "no": 1,
+          "task": "素材检索与授权",
+          "seconds": 60,
+          "minutes": 1.0,
+          "cost_items": [
+            "素材授权"
+          ],
+          "cost": 0.6
+        },
+        {
+          "no": 2,
+          "task": "脚本撰写（含配音文案）",
+          "seconds": 45,
+          "minutes": 0.8,
+          "cost_items": [
+            "脚本撰写",
+            "配音"
+          ],
+          "cost": 4.7
+        },
+        {
+          "no": 3,
+          "task": "剪辑合成（含配音合成）",
+          "seconds": 375,
+          "minutes": 6.2,
+          "cost_items": [
+            "剪辑合成"
+          ],
+          "cost": 4.4
+        },
+        {
+          "no": 4,
+          "task": "内容审核",
+          "seconds": 30,
+          "minutes": 0.5,
+          "cost_items": [
+            "内容审核"
+          ],
+          "cost": 0.5
+        }
+      ],
       "total": 10.2,
       "currency": "模拟单位",
       "estimated_minutes": 9
@@ -96,6 +331,49 @@
           "item": "内容审核",
           "amount": 0.5,
           "detail": "固定审核费"
+        }
+      ],
+      "outline": [
+        {
+          "no": 1,
+          "task": "素材检索与授权",
+          "seconds": 60,
+          "minutes": 1.0,
+          "cost_items": [
+            "素材授权"
+          ],
+          "cost": 0.6
+        },
+        {
+          "no": 2,
+          "task": "脚本撰写（含配音文案）",
+          "seconds": 45,
+          "minutes": 0.8,
+          "cost_items": [
+            "脚本撰写",
+            "配音"
+          ],
+          "cost": 4.7
+        },
+        {
+          "no": 3,
+          "task": "剪辑合成（含配音合成）",
+          "seconds": 375,
+          "minutes": 6.2,
+          "cost_items": [
+            "剪辑合成"
+          ],
+          "cost": 4.4
+        },
+        {
+          "no": 4,
+          "task": "内容审核",
+          "seconds": 30,
+          "minutes": 0.5,
+          "cost_items": [
+            "内容审核"
+          ],
+          "cost": 0.5
         }
       ],
       "total": 10.2,
@@ -175,7 +453,7 @@
       "plan_id": "plan_15ed4383c1",
       "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
       "deduped": false,
-      "saved_at": "2026-10-28 15:41:51"
+      "saved_at": "2026-10-28 16:05:13"
     }
   },
   "status": "COMPLETED",
@@ -265,6 +543,49 @@
               "item": "内容审核",
               "amount": 0.5,
               "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 240,
+              "minutes": 4.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 2.4
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
             }
           ],
           "total": 12.0,
@@ -368,6 +689,49 @@
               "item": "内容审核",
               "amount": 0.5,
               "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 60,
+              "minutes": 1.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 0.6
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
             }
           ],
           "total": 10.2,
@@ -521,7 +885,7 @@
           "plan_id": "plan_15ed4383c1",
           "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
           "deduped": false,
-          "saved_at": "2026-10-28 15:41:51"
+          "saved_at": "2026-10-28 16:05:13"
         },
         "error": null,
         "tool": "save_plan"
@@ -545,6 +909,7 @@
       "follow_up": "结束"
     }
   ],
+  "resumed_from": 0,
   "last_observation": {
     "status": "ok",
     "summary": "方案已保存 plan_15ed4383c1（10.2 模拟单位）",
@@ -552,9 +917,11 @@
       "plan_id": "plan_15ed4383c1",
       "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
       "deduped": false,
-      "saved_at": "2026-10-28 15:41:51"
+      "saved_at": "2026-10-28 16:05:13"
     },
     "error": null,
     "tool": "save_plan"
-  }
+  },
+  "last_action": "save_plan",
+  "chosen_variant": "full"
 }

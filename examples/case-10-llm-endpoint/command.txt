@@ -1,0 +1,1 @@
+-m src.cli run --input examples/inputs/01-normal.json --run-id case-10 --planner llm --out examples/case-10-llm-endpoint --now 2026-10-28 15:00

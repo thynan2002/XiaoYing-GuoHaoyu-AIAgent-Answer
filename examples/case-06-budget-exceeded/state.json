@@ -14,6 +14,105 @@
   "step": 5,
   "tool_calls": 4,
   "scratch": {
+    "progress": {
+      "list_plan_variants": {
+        "variants": [
+          {
+            "variant_id": "full",
+            "label": "完整版",
+            "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+            "duration_s": 60,
+            "material_items": 4
+          },
+          {
+            "variant_id": "lite",
+            "label": "精简版",
+            "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+            "duration_s": 30,
+            "material_items": 2
+          },
+          {
+            "variant_id": "micro",
+            "label": "极简版",
+            "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+            "duration_s": 15,
+            "material_items": 1
+          }
+        ]
+      },
+      "estimate_cost": {
+        "variant_id": "micro",
+        "label": "极简版",
+        "duration_s": 15,
+        "material_items": 1,
+        "shots": 1,
+        "voice": false,
+        "review": false,
+        "breakdown": [
+          {
+            "item": "素材授权",
+            "amount": 0.6,
+            "detail": "1 条 × 0.6"
+          },
+          {
+            "item": "脚本撰写",
+            "amount": 2.0,
+            "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+          },
+          {
+            "item": "剪辑合成",
+            "amount": 2.4,
+            "detail": "基础 2.0 + 1 镜头 × 0.4"
+          }
+        ],
+        "outline": [
+          {
+            "no": 1,
+            "task": "素材检索与授权",
+            "seconds": 60,
+            "minutes": 1.0,
+            "cost_items": [
+              "素材授权"
+            ],
+            "cost": 0.6
+          },
+          {
+            "no": 2,
+            "task": "脚本撰写（含配音文案）",
+            "seconds": 45,
+            "minutes": 0.8,
+            "cost_items": [
+              "脚本撰写",
+              "配音"
+            ],
+            "cost": 2.0
+          },
+          {
+            "no": 3,
+            "task": "剪辑合成（含配音合成）",
+            "seconds": 75,
+            "minutes": 1.2,
+            "cost_items": [
+              "剪辑合成"
+            ],
+            "cost": 2.4
+          },
+          {
+            "no": 4,
+            "task": "内容审核",
+            "seconds": 0,
+            "minutes": 0.0,
+            "cost_items": [
+              "内容审核"
+            ],
+            "cost": 0.0
+          }
+        ],
+        "total": 5.0,
+        "currency": "模拟单位",
+        "estimated_minutes": 3
+      }
+    },
     "queue": [],
     "labels": {
       "full": "完整版",
@@ -43,6 +142,49 @@
           "item": "剪辑合成",
           "amount": 2.4,
           "detail": "基础 2.0 + 1 镜头 × 0.4"
+        }
+      ],
+      "outline": [
+        {
+          "no": 1,
+          "task": "素材检索与授权",
+          "seconds": 60,
+          "minutes": 1.0,
+          "cost_items": [
+            "素材授权"
+          ],
+          "cost": 0.6
+        },
+        {
+          "no": 2,
+          "task": "脚本撰写（含配音文案）",
+          "seconds": 45,
+          "minutes": 0.8,
+          "cost_items": [
+            "脚本撰写",
+            "配音"
+          ],
+          "cost": 2.0
+        },
+        {
+          "no": 3,
+          "task": "剪辑合成（含配音合成）",
+          "seconds": 75,
+          "minutes": 1.2,
+          "cost_items": [
+            "剪辑合成"
+          ],
+          "cost": 2.4
+        },
+        {
+          "no": 4,
+          "task": "内容审核",
+          "seconds": 0,
+          "minutes": 0.0,
+          "cost_items": [
+            "内容审核"
+          ],
+          "cost": 0.0
         }
       ],
       "total": 5.0,
@@ -159,6 +301,49 @@
               "detail": "固定审核费"
             }
           ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 240,
+              "minutes": 4.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 2.4
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
           "total": 12.0,
           "currency": "模拟单位",
           "estimated_minutes": 12
@@ -214,6 +399,49 @@
               "detail": "固定审核费"
             }
           ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 120,
+              "minutes": 2.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 1.2
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 3.1
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 195,
+              "minutes": 3.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 3.2
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
           "total": 8.0,
           "currency": "模拟单位",
           "estimated_minutes": 7
@@ -259,6 +487,49 @@
               "detail": "基础 2.0 + 1 镜头 × 0.4"
             }
           ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 60,
+              "minutes": 1.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 0.6
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 2.0
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 75,
+              "minutes": 1.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 2.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 0,
+              "minutes": 0.0,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.0
+            }
+          ],
           "total": 5.0,
           "currency": "模拟单位",
           "estimated_minutes": 3
@@ -285,6 +556,7 @@
       "follow_up": "结束"
     }
   ],
+  "resumed_from": 0,
   "last_observation": {
     "status": "ok",
     "summary": "极简版估算 5.0 模拟单位，约 3 分钟",
@@ -313,11 +585,55 @@
           "detail": "基础 2.0 + 1 镜头 × 0.4"
         }
       ],
+      "outline": [
+        {
+          "no": 1,
+          "task": "素材检索与授权",
+          "seconds": 60,
+          "minutes": 1.0,
+          "cost_items": [
+            "素材授权"
+          ],
+          "cost": 0.6
+        },
+        {
+          "no": 2,
+          "task": "脚本撰写（含配音文案）",
+          "seconds": 45,
+          "minutes": 0.8,
+          "cost_items": [
+            "脚本撰写",
+            "配音"
+          ],
+          "cost": 2.0
+        },
+        {
+          "no": 3,
+          "task": "剪辑合成（含配音合成）",
+          "seconds": 75,
+          "minutes": 1.2,
+          "cost_items": [
+            "剪辑合成"
+          ],
+          "cost": 2.4
+        },
+        {
+          "no": 4,
+          "task": "内容审核",
+          "seconds": 0,
+          "minutes": 0.0,
+          "cost_items": [
+            "内容审核"
+          ],
+          "cost": 0.0
+        }
+      ],
       "total": 5.0,
       "currency": "模拟单位",
       "estimated_minutes": 3
     },
     "error": null,
     "tool": "estimate_cost"
-  }
+  },
+  "last_action": "estimate_cost"
 }

@@ -46,6 +46,49 @@
         "detail": "固定审核费"
       }
     ],
+    "outline": [
+      {
+        "no": 1,
+        "task": "素材检索与授权",
+        "seconds": 120,
+        "minutes": 2.0,
+        "cost_items": [
+          "素材授权"
+        ],
+        "cost": 1.2
+      },
+      {
+        "no": 2,
+        "task": "脚本撰写（含配音文案）",
+        "seconds": 45,
+        "minutes": 0.8,
+        "cost_items": [
+          "脚本撰写",
+          "配音"
+        ],
+        "cost": 3.1
+      },
+      {
+        "no": 3,
+        "task": "剪辑合成（含配音合成）",
+        "seconds": 195,
+        "minutes": 3.2,
+        "cost_items": [
+          "剪辑合成"
+        ],
+        "cost": 3.2
+      },
+      {
+        "no": 4,
+        "task": "内容审核",
+        "seconds": 30,
+        "minutes": 0.5,
+        "cost_items": [
+          "内容审核"
+        ],
+        "cost": 0.5
+      }
+    ],
     "material_ids": [
       "m010",
       "m013"
@@ -66,7 +109,7 @@
       "plan_id": "plan_786a532b33",
       "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
       "deduped": false,
-      "saved_at": "2026-10-28 15:41:50"
+      "saved_at": "2026-10-28 16:05:12"
     },
     "error": null,
     "tool": "save_plan"
@@ -122,6 +165,78 @@
     "max_steps": 12,
     "tool_calls": 10,
     "max_tool_calls": 12,
-    "elapsed_ms": 15
+    "elapsed_ms": 18
+  },
+  "steps_brief": [
+    {
+      "step": 1,
+      "action": "list_plan_variants",
+      "status": "ok",
+      "summary": "可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)"
+    },
+    {
+      "step": 2,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "完整版估算 12.0 模拟单位，约 12 分钟"
+    },
+    {
+      "step": 3,
+      "action": "search_materials",
+      "status": "partial",
+      "summary": "命中 2/4 条：产品开箱特写、数码产品细节摇镜"
+    },
+    {
+      "step": 4,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "完整版估算 10.8 模拟单位，约 10 分钟"
+    },
+    {
+      "step": 5,
+      "action": "generate_script",
+      "status": "error",
+      "summary": "generate_script 失败：generate_script 返回 503（注入故障）"
+    },
+    {
+      "step": 6,
+      "action": "generate_script",
+      "status": "error",
+      "summary": "generate_script 失败：generate_script 返回 503（注入故障）"
+    },
+    {
+      "step": 7,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "精简版估算 8.0 模拟单位，约 7 分钟"
+    },
+    {
+      "step": 8,
+      "action": "search_materials",
+      "status": "ok",
+      "summary": "命中 2/2 条：产品开箱特写、数码产品细节摇镜"
+    },
+    {
+      "step": 9,
+      "action": "generate_script",
+      "status": "ok",
+      "summary": "生成脚本《双十一数码开箱合集｜精简版脚本》，3 个镜头"
+    },
+    {
+      "step": 10,
+      "action": "save_plan",
+      "status": "ok",
+      "summary": "方案已保存 plan_786a532b33（8.0 模拟单位）"
+    },
+    {
+      "step": 11,
+      "action": "finish",
+      "status": "terminal",
+      "summary": "COMPLETED：方案已保存 plan_786a532b33"
+    }
+  ],
+  "resume": {
+    "resumed": false,
+    "from_step": 0
   }
 }

@@ -62,6 +62,49 @@
           "detail": "基础 2.0 + 1 镜头 × 0.4"
         }
       ],
+      "outline": [
+        {
+          "no": 1,
+          "task": "素材检索与授权",
+          "seconds": 60,
+          "minutes": 1.0,
+          "cost_items": [
+            "素材授权"
+          ],
+          "cost": 0.6
+        },
+        {
+          "no": 2,
+          "task": "脚本撰写（含配音文案）",
+          "seconds": 45,
+          "minutes": 0.8,
+          "cost_items": [
+            "脚本撰写",
+            "配音"
+          ],
+          "cost": 2.0
+        },
+        {
+          "no": 3,
+          "task": "剪辑合成（含配音合成）",
+          "seconds": 75,
+          "minutes": 1.2,
+          "cost_items": [
+            "剪辑合成"
+          ],
+          "cost": 2.4
+        },
+        {
+          "no": 4,
+          "task": "内容审核",
+          "seconds": 0,
+          "minutes": 0.0,
+          "cost_items": [
+            "内容审核"
+          ],
+          "cost": 0.0
+        }
+      ],
       "total": 5.0,
       "currency": "模拟单位",
       "estimated_minutes": 3
@@ -80,6 +123,42 @@
     "max_steps": 12,
     "tool_calls": 4,
     "max_tool_calls": 12,
-    "elapsed_ms": 8
+    "elapsed_ms": 7
+  },
+  "steps_brief": [
+    {
+      "step": 1,
+      "action": "list_plan_variants",
+      "status": "ok",
+      "summary": "可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)"
+    },
+    {
+      "step": 2,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "完整版估算 12.0 模拟单位，约 12 分钟"
+    },
+    {
+      "step": 3,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "精简版估算 8.0 模拟单位，约 7 分钟"
+    },
+    {
+      "step": 4,
+      "action": "estimate_cost",
+      "status": "ok",
+      "summary": "极简版估算 5.0 模拟单位，约 3 分钟"
+    },
+    {
+      "step": 5,
+      "action": "finish",
+      "status": "terminal",
+      "summary": "INCOMPLETE_BUDGET：没有可行方案（预算 4.0，最低方案 5.0，缺口 1.0）：full:费用 12.0 超预算 4.0；lite:费用 8.0 超预算 4.0；micro:费用 5.0 超预算 4.0"
+    }
+  ],
+  "resume": {
+    "resumed": false,
+    "from_step": 0
   }
 }

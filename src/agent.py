@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from . import config
-from .models import Task
+from .models import Observation, Task
 from .planner import DecisionContext, PlannerError
 from .tools import ToolRegistry
 
@@ -70,13 +70,20 @@ class Agent:
             state["task"] = task.to_dict()
             state["run_id"] = self.run_id
             state["planner"] = self.planner.name
+            # 人工介入 = 新的重试窗口：把"同一工具连续失败"计数清零，
+            # 否则续跑会立刻再次进入"降级/收尾"，等于没续跑。
+            scratch = state.setdefault("scratch", {})
+            for key in [k for k in scratch if k.endswith("_fail")]:
+                scratch[key] = 0
         else:
             state["task"] = {**state["task"], "available_minutes": task.available_minutes}
+        state["resumed_from"] = state["step"]
+
         started = time.time()
-        last_action: str | None = None
-        last_obs = None
+        # 续跑时恢复"上一次动作/观察"，让规划器从断点接着判断，而不是从头再来
+        last_action: str | None = state.get("last_action")
+        last_obs = Observation(**state["last_observation"]) if state.get("last_observation") else None
         same_fail = 0
-        resumed_from = state["step"]
 
         while True:
             # 闸门 1：步数上限
@@ -144,6 +151,18 @@ class Agent:
 
             record["observation"] = obs.to_dict()
             state["last_observation"] = obs.to_dict()
+            state["last_action"] = action.action
+            # 与规划器无关的"已完成工序"台账：谁做规划都能读到，也便于续跑与出报告
+            if obs.status in ("ok", "partial"):
+                state.setdefault("scratch", {}).setdefault("progress", {})[action.action] = obs.data
+            # 模型"选定"的方案：从它的工具参数里记，而不是从费用的返回里推
+            vid = (action.args or {}).get("variant_id")
+            if vid and action.action in ("search_materials", "generate_script", "save_plan"):
+                state["chosen_variant"] = vid
+            # 模型"选定"的方案：从它的工具参数里记，而不是从费用的返回里推
+            vid = (action.args or {}).get("variant_id")
+            if vid and action.action in ("search_materials", "generate_script", "save_plan"):
+                state["chosen_variant"] = vid
             record["elapsed_ms"] = int((time.time() - t0) * 1000)
             state["steps"].append(record)
             self._checkpoint(state)
@@ -154,37 +173,61 @@ class Agent:
 
     # ------------------------------------------------------------ 收尾
     @staticmethod
-    def _kept(state: dict) -> str:
+    def _artifacts(state: dict) -> dict[str, Any]:
+        """统一口径读取"已拿到的成果"。
+
+        进度有两个来源：规划器自己的 scratch（mock 用）与 Agent 维护的 progress 台账
+        （任何规划器都有）。收尾校验、报告、续跑都从这里取，避免"换规划器就判不出完成"。
+        """
+        sc = state.get("scratch") or {}
+        prog = sc.get("progress") or {}
+        script = sc.get("script") or (prog.get("generate_script") or {}).get("script")
+        materials = sc.get("materials") or (prog.get("search_materials") or {}).get("items") or []
+        material_ids = sc.get("material_ids") or [m["id"] for m in materials if "id" in m]
+        # 只有"被选中的方案"的估算才算方案；被预算否掉的候选不能冒充交付方案
+        chosen = state.get("chosen_variant") or sc.get("chosen")
+        est_all = prog.get("estimate_cost") or {}
+        estimate = sc.get("estimate") or (est_all if est_all.get("variant_id") == chosen else {})
+        return {
+            "estimate": estimate,
+            "saved": sc.get("saved") or (prog.get("save_plan") or {}),
+            "script": script,
+            "materials": materials,
+            "material_ids": material_ids,
+            "rejected": sc.get("rejected") or [],
+        }
+
+    @classmethod
+    def _kept(cls, state: dict) -> str:
         """尚未完成时，把"已经拿到的成果"讲清楚，避免看起来像什么都没做。"""
-        sc = state["scratch"]
+        a = cls._artifacts(state)
         parts: list[str] = []
-        est = sc.get("estimate") or {}
+        est = a["estimate"]
         if est:
             parts.append(f"已选定{est.get('label')}、估算 {est.get('total')}")
-        mats = sc.get("materials") or []
-        if mats:
-            parts.append(f"已检索 {len(mats)} 条素材")
-        if sc.get("script"):
+        if a["materials"]:
+            parts.append(f"已检索 {len(a['materials'])} 条素材")
+        if a["script"]:
             parts.append("已生成脚本")
-        if sc.get("saved"):
-            parts.append(f"已保存 {sc['saved'].get('plan_id')}")
-        if sc.get("rejected"):
-            parts.append(f"已否 {len(sc['rejected'])} 个方案")
+        if a["saved"]:
+            parts.append(f"已保存 {a['saved'].get('plan_id')}")
+        if a["rejected"]:
+            parts.append(f"已否 {len(a['rejected'])} 个方案")
         return "已保留：" + "、".join(parts) if parts else "尚无可用中间产物"
 
     def _finish(self, state: dict, started: float, status: str, reason: str,
                 basis: str = "") -> dict[str, Any]:
         scratch = state["scratch"]
         task = state["task"]
+        a = self._artifacts(state)
 
         # 闸门 3：声称完成必须真的完成
         if status == "COMPLETED":
-            saved = scratch.get("saved") or {}
-            est = scratch.get("estimate") or {}
+            est = a["estimate"]
             problems = []
-            if not saved.get("plan_id"):
+            if not a["saved"].get("plan_id"):
                 problems.append("没有落盘方案")
-            if not scratch.get("script"):
+            if not a["script"]:
                 problems.append("没有脚本")
             budget = task.get("budget")
             if budget is not None and est and float(est.get("total", 0)) > float(budget) + 1e-9:
@@ -208,9 +251,9 @@ class Agent:
         state["steps"] = steps
         self._checkpoint(state)
 
-        estimate = scratch.get("estimate") or {}
-        saved = scratch.get("saved") or {}
-        materials = scratch.get("materials") or []
+        estimate = a["estimate"]
+        saved = a["saved"]
+        materials = a["materials"]
         elapsed_ms = int((time.time() - started) * 1000)
 
         plan = None
@@ -222,8 +265,9 @@ class Agent:
                 "currency": estimate.get("currency"),
                 "estimated_minutes": estimate.get("estimated_minutes"),
                 "breakdown": estimate.get("breakdown", []),
-                "material_ids": scratch.get("material_ids") or [],
-                "script_title": (scratch.get("script") or {}).get("title"),
+                "outline": estimate.get("outline", []),
+                "material_ids": a["material_ids"],
+                "script_title": (a["script"] or {}).get("title"),
             }
 
         result = {
@@ -233,7 +277,7 @@ class Agent:
             "status_reason": reason,
             "task": task,
             "plan": plan,
-            "rejected": scratch.get("rejected", []),
+            "rejected": a["rejected"],
             "last_observation": state.get("last_observation"),
             "saved_plan": {
                 "plan_id": saved.get("plan_id"),
@@ -242,7 +286,7 @@ class Agent:
             } if saved else None,
             "artifacts": {
                 "materials": [{"id": m["id"], "title": m["title"]} for m in materials],
-                "script": scratch.get("script"),
+                "script": a["script"],
                 "script_status": scratch.get("script_status"),
             },
             "usage": {
@@ -251,6 +295,17 @@ class Agent:
                 "tool_calls": state["tool_calls"],
                 "max_tool_calls": self.max_tool_calls,
                 "elapsed_ms": elapsed_ms,
+            },
+            # 逐步状态摘要：交付结果里要能直接看到"哪一步成功/失败/被拒"
+            "steps_brief": [
+                {"step": s["step"], "action": s["action"],
+                 "status": (s.get("observation") or {}).get("status"),
+                 "summary": (s.get("observation") or {}).get("summary")}
+                for s in steps
+            ],
+            "resume": {
+                "resumed": bool(state.get("resumed_from")),
+                "from_step": state.get("resumed_from", 0),
             },
         }
 

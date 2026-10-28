@@ -104,6 +104,49 @@
               "detail": "固定审核费"
             }
           ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 240,
+              "minutes": 4.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 2.4
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
           "total": 12.0,
           "currency": "模拟单位",
           "estimated_minutes": 12
@@ -220,6 +263,49 @@
               "detail": "固定审核费"
             }
           ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 120,
+              "minutes": 2.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 1.2
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
           "total": 10.8,
           "currency": "模拟单位",
           "estimated_minutes": 10
@@ -319,6 +405,49 @@
               "item": "内容审核",
               "amount": 0.5,
               "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 120,
+              "minutes": 2.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 1.2
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 3.1
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 195,
+              "minutes": 3.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 3.2
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
             }
           ],
           "total": 8.0,
@@ -489,12 +618,12 @@
           "plan_id": "plan_786a532b33",
           "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
           "deduped": false,
-          "saved_at": "2026-10-28 15:41:50"
+          "saved_at": "2026-10-28 16:05:12"
         },
         "error": null,
         "tool": "save_plan"
       },
-      "elapsed_ms": 0,
+      "elapsed_ms": 1,
       "follow_up": "finish"
     },
     {
