@@ -1,0 +1,1 @@
+-m src.cli run --input examples/inputs/01-normal.json --run-id case-08 --max-steps 3 --out examples/case-08-step-limit --now 2026-10-28 15:00

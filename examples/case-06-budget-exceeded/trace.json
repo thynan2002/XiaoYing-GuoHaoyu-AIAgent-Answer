@@ -1,0 +1,233 @@
+{
+  "run_id": "case-06",
+  "planner": "mock-policy",
+  "status": "INCOMPLETE_BUDGET",
+  "status_reason": "没有可行方案（预算 4.0，最低方案 5.0，缺口 1.0）：full:费用 12.0 超预算 4.0；lite:费用 8.0 超预算 4.0；micro:费用 5.0 超预算 4.0；已保留：已否 3 个方案",
+  "task": {
+    "topic": "品牌十周年短片",
+    "budget": 4.0,
+    "deadline": "2026-11-10 18:00",
+    "tone": "温情",
+    "audience": "老用户",
+    "notes": "预算被砍到 4，运营想看还能不能做",
+    "available_minutes": 18880.0,
+    "missing_fields": []
+  },
+  "limits": {
+    "max_steps": 12,
+    "max_tool_calls": 12
+  },
+  "steps": [
+    {
+      "step": 1,
+      "action": "list_plan_variants",
+      "args": {
+        "topic": "品牌十周年短片"
+      },
+      "decision_basis": "先取候选方案列表，费用必须逐项现算，不凭印象报价",
+      "observation": {
+        "status": "ok",
+        "summary": "可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)",
+        "data": {
+          "variants": [
+            {
+              "variant_id": "full",
+              "label": "完整版",
+              "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+              "duration_s": 60,
+              "material_items": 4
+            },
+            {
+              "variant_id": "lite",
+              "label": "精简版",
+              "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+              "duration_s": 30,
+              "material_items": 2
+            },
+            {
+              "variant_id": "micro",
+              "label": "极简版",
+              "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+              "duration_s": 15,
+              "material_items": 1
+            }
+          ]
+        },
+        "error": null,
+        "tool": "list_plan_variants"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 2,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "full"
+      },
+      "decision_basis": "先按完整度优先，核算 full 的费用看是否落在预算内",
+      "observation": {
+        "status": "ok",
+        "summary": "完整版估算 12.0 模拟单位，约 12 分钟",
+        "data": {
+          "variant_id": "full",
+          "label": "完整版",
+          "duration_s": 60,
+          "material_items": 4,
+          "shots": 6,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 2.4,
+              "detail": "4 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 3.0,
+              "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.7,
+              "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 4.4,
+              "detail": "基础 2.0 + 6 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "total": 12.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 12
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 3,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "lite"
+      },
+      "decision_basis": "完整版被否（费用 12.0 超预算 4.0），核算 lite 的费用看是否落在预算内",
+      "observation": {
+        "status": "ok",
+        "summary": "精简版估算 8.0 模拟单位，约 7 分钟",
+        "data": {
+          "variant_id": "lite",
+          "label": "精简版",
+          "duration_s": 30,
+          "material_items": 2,
+          "shots": 3,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 1.2,
+              "detail": "2 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 2.0,
+              "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.1,
+              "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 3.2,
+              "detail": "基础 2.0 + 3 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "total": 8.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 7
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 4,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "micro"
+      },
+      "decision_basis": "精简版被否（费用 8.0 超预算 4.0），核算 micro 的费用看是否落在预算内",
+      "observation": {
+        "status": "ok",
+        "summary": "极简版估算 5.0 模拟单位，约 3 分钟",
+        "data": {
+          "variant_id": "micro",
+          "label": "极简版",
+          "duration_s": 15,
+          "material_items": 1,
+          "shots": 1,
+          "voice": false,
+          "review": false,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 0.6,
+              "detail": "1 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 2.0,
+              "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 2.4,
+              "detail": "基础 2.0 + 1 镜头 × 0.4"
+            }
+          ],
+          "total": 5.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 3
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "finish"
+    },
+    {
+      "step": 5,
+      "action": "finish",
+      "args": {
+        "status": "INCOMPLETE_BUDGET",
+        "reason": "没有可行方案（预算 4.0，最低方案 5.0，缺口 1.0）：full:费用 12.0 超预算 4.0；lite:费用 8.0 超预算 4.0；micro:费用 5.0 超预算 4.0"
+      },
+      "decision_basis": "所有候选都不满足预算/时间，返回未完成，缺口 1.0",
+      "observation": {
+        "status": "terminal",
+        "summary": "INCOMPLETE_BUDGET：没有可行方案（预算 4.0，最低方案 5.0，缺口 1.0）：full:费用 12.0 超预算 4.0；lite:费用 8.0 超预算 4.0；micro:费用 5.0 超预算 4.0"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "结束"
+    }
+  ]
+}

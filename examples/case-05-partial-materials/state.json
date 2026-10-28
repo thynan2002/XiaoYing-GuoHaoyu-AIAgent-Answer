@@ -1,0 +1,560 @@
+{
+  "run_id": "case-05",
+  "planner": "mock-policy",
+  "task": {
+    "topic": "城市夜跑社群招募",
+    "budget": 12.0,
+    "deadline": "2026-11-06 18:00",
+    "tone": "热血",
+    "audience": "都市白领",
+    "notes": "素材库当天返回不稳定，可能只给部分结果",
+    "available_minutes": 13120.0,
+    "missing_fields": []
+  },
+  "step": 7,
+  "tool_calls": 6,
+  "scratch": {
+    "queue": [
+      "lite",
+      "micro"
+    ],
+    "labels": {
+      "full": "完整版",
+      "lite": "精简版",
+      "micro": "极简版"
+    },
+    "last_estimate": {
+      "variant_id": "full",
+      "label": "完整版",
+      "duration_s": 60,
+      "material_items": 1,
+      "shots": 6,
+      "voice": true,
+      "review": true,
+      "breakdown": [
+        {
+          "item": "素材授权",
+          "amount": 0.6,
+          "detail": "1 条 × 0.6"
+        },
+        {
+          "item": "脚本撰写",
+          "amount": 3.0,
+          "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+        },
+        {
+          "item": "配音",
+          "amount": 1.7,
+          "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+        },
+        {
+          "item": "剪辑合成",
+          "amount": 4.4,
+          "detail": "基础 2.0 + 6 镜头 × 0.4"
+        },
+        {
+          "item": "内容审核",
+          "amount": 0.5,
+          "detail": "固定审核费"
+        }
+      ],
+      "total": 10.2,
+      "currency": "模拟单位",
+      "estimated_minutes": 9
+    },
+    "chosen": "full",
+    "estimate": {
+      "variant_id": "full",
+      "label": "完整版",
+      "duration_s": 60,
+      "material_items": 1,
+      "shots": 6,
+      "voice": true,
+      "review": true,
+      "breakdown": [
+        {
+          "item": "素材授权",
+          "amount": 0.6,
+          "detail": "1 条 × 0.6"
+        },
+        {
+          "item": "脚本撰写",
+          "amount": 3.0,
+          "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+        },
+        {
+          "item": "配音",
+          "amount": 1.7,
+          "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+        },
+        {
+          "item": "剪辑合成",
+          "amount": 4.4,
+          "detail": "基础 2.0 + 6 镜头 × 0.4"
+        },
+        {
+          "item": "内容审核",
+          "amount": 0.5,
+          "detail": "固定审核费"
+        }
+      ],
+      "total": 10.2,
+      "currency": "模拟单位",
+      "estimated_minutes": 9
+    },
+    "materials": [
+      {
+        "id": "m001",
+        "title": "城市夜景延时",
+        "type": "video",
+        "duration_s": 12,
+        "tags": [
+          "城市",
+          "夜景",
+          "延时",
+          "氛围",
+          "开场"
+        ]
+      }
+    ],
+    "material_ids": [
+      "m001"
+    ],
+    "re_estimated": true,
+    "script": {
+      "title": "城市夜跑社群招募｜完整版脚本",
+      "tone": "热血",
+      "duration_s": 60,
+      "shots": [
+        {
+          "shot": 1,
+          "visual": "城市夜景延时",
+          "seconds": 10.0,
+          "voiceover": "用 3 秒把「城市夜跑社群招募」说清楚——从城市夜景延时开始。",
+          "on_screen_text": "城市夜跑社群招募 · 1"
+        },
+        {
+          "shot": 2,
+          "visual": "城市夜景延时",
+          "seconds": 10.0,
+          "voiceover": "第 2 镜头承接城市夜景延时，推进情绪。",
+          "on_screen_text": "城市夜跑社群招募 · 2"
+        },
+        {
+          "shot": 3,
+          "visual": "城市夜景延时",
+          "seconds": 10.0,
+          "voiceover": "第 3 镜头承接城市夜景延时，推进情绪。",
+          "on_screen_text": "城市夜跑社群招募 · 3"
+        },
+        {
+          "shot": 4,
+          "visual": "城市夜景延时",
+          "seconds": 10.0,
+          "voiceover": "第 4 镜头承接城市夜景延时，推进情绪。",
+          "on_screen_text": "城市夜跑社群招募 · 4"
+        },
+        {
+          "shot": 5,
+          "visual": "城市夜景延时",
+          "seconds": 10.0,
+          "voiceover": "第 5 镜头承接城市夜景延时，推进情绪。",
+          "on_screen_text": "城市夜跑社群招募 · 5"
+        },
+        {
+          "shot": 6,
+          "visual": "城市夜景延时",
+          "seconds": 10.0,
+          "voiceover": "收尾落回「城市夜跑社群招募」，一句行动号召。",
+          "on_screen_text": "城市夜跑社群招募 · 6"
+        }
+      ]
+    },
+    "script_status": "partial",
+    "saved": {
+      "plan_id": "plan_15ed4383c1",
+      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
+      "deduped": false,
+      "saved_at": "2026-10-28 15:41:51"
+    }
+  },
+  "status": "COMPLETED",
+  "status_reason": "方案已保存 plan_15ed4383c1",
+  "steps": [
+    {
+      "step": 1,
+      "action": "list_plan_variants",
+      "args": {
+        "topic": "城市夜跑社群招募"
+      },
+      "decision_basis": "先取候选方案列表，费用必须逐项现算，不凭印象报价",
+      "observation": {
+        "status": "ok",
+        "summary": "可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)",
+        "data": {
+          "variants": [
+            {
+              "variant_id": "full",
+              "label": "完整版",
+              "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+              "duration_s": 60,
+              "material_items": 4
+            },
+            {
+              "variant_id": "lite",
+              "label": "精简版",
+              "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+              "duration_s": 30,
+              "material_items": 2
+            },
+            {
+              "variant_id": "micro",
+              "label": "极简版",
+              "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+              "duration_s": 15,
+              "material_items": 1
+            }
+          ]
+        },
+        "error": null,
+        "tool": "list_plan_variants"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 2,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "full"
+      },
+      "decision_basis": "先按完整度优先，核算 full 的费用看是否落在预算内",
+      "observation": {
+        "status": "ok",
+        "summary": "完整版估算 12.0 模拟单位，约 12 分钟",
+        "data": {
+          "variant_id": "full",
+          "label": "完整版",
+          "duration_s": 60,
+          "material_items": 4,
+          "shots": 6,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 2.4,
+              "detail": "4 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 3.0,
+              "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.7,
+              "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 4.4,
+              "detail": "基础 2.0 + 6 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "total": 12.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 12
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "search_materials"
+    },
+    {
+      "step": 3,
+      "action": "search_materials",
+      "args": {
+        "queries": [
+          "城市",
+          "城市夜跑社群招募"
+        ],
+        "limit": 4
+      },
+      "decision_basis": "完整版 12.0 ≤ 预算 12.0、约 12 分钟可交付，选它并检索素材",
+      "observation": {
+        "status": "partial",
+        "summary": "（注入部分失败）只返回 1/4 条：城市夜景延时",
+        "data": {
+          "items": [
+            {
+              "id": "m001",
+              "title": "城市夜景延时",
+              "type": "video",
+              "duration_s": 12,
+              "tags": [
+                "城市",
+                "夜景",
+                "延时",
+                "氛围",
+                "开场"
+              ]
+            }
+          ],
+          "requested": 4,
+          "returned": 1,
+          "degraded": true,
+          "queries": [
+            "城市",
+            "城市夜跑社群招募"
+          ],
+          "injected_partial": true
+        },
+        "error": null,
+        "tool": "search_materials"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 4,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "full",
+        "material_ids": [
+          "m001"
+        ]
+      },
+      "decision_basis": "只拿到 1/4 条素材，按实际条数重新核算费用再决定",
+      "observation": {
+        "status": "ok",
+        "summary": "完整版估算 10.2 模拟单位，约 9 分钟",
+        "data": {
+          "variant_id": "full",
+          "label": "完整版",
+          "duration_s": 60,
+          "material_items": 1,
+          "shots": 6,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 0.6,
+              "detail": "1 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 3.0,
+              "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.7,
+              "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 4.4,
+              "detail": "基础 2.0 + 6 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "total": 10.2,
+          "currency": "模拟单位",
+          "estimated_minutes": 9
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "generate_script"
+    },
+    {
+      "step": 5,
+      "action": "generate_script",
+      "args": {
+        "variant_id": "full",
+        "material_ids": [
+          "m001"
+        ],
+        "tone": "热血",
+        "topic": "城市夜跑社群招募"
+      },
+      "decision_basis": "重算后 10.2 ≤ 预算 12.0，用现有 1 条素材写脚本",
+      "observation": {
+        "status": "partial",
+        "summary": "素材不足（1/4），已按现有素材生成缩减脚本",
+        "data": {
+          "script": {
+            "title": "城市夜跑社群招募｜完整版脚本",
+            "tone": "热血",
+            "duration_s": 60,
+            "shots": [
+              {
+                "shot": 1,
+                "visual": "城市夜景延时",
+                "seconds": 10.0,
+                "voiceover": "用 3 秒把「城市夜跑社群招募」说清楚——从城市夜景延时开始。",
+                "on_screen_text": "城市夜跑社群招募 · 1"
+              },
+              {
+                "shot": 2,
+                "visual": "城市夜景延时",
+                "seconds": 10.0,
+                "voiceover": "第 2 镜头承接城市夜景延时，推进情绪。",
+                "on_screen_text": "城市夜跑社群招募 · 2"
+              },
+              {
+                "shot": 3,
+                "visual": "城市夜景延时",
+                "seconds": 10.0,
+                "voiceover": "第 3 镜头承接城市夜景延时，推进情绪。",
+                "on_screen_text": "城市夜跑社群招募 · 3"
+              },
+              {
+                "shot": 4,
+                "visual": "城市夜景延时",
+                "seconds": 10.0,
+                "voiceover": "第 4 镜头承接城市夜景延时，推进情绪。",
+                "on_screen_text": "城市夜跑社群招募 · 4"
+              },
+              {
+                "shot": 5,
+                "visual": "城市夜景延时",
+                "seconds": 10.0,
+                "voiceover": "第 5 镜头承接城市夜景延时，推进情绪。",
+                "on_screen_text": "城市夜跑社群招募 · 5"
+              },
+              {
+                "shot": 6,
+                "visual": "城市夜景延时",
+                "seconds": 10.0,
+                "voiceover": "收尾落回「城市夜跑社群招募」，一句行动号召。",
+                "on_screen_text": "城市夜跑社群招募 · 6"
+              }
+            ]
+          },
+          "reused": false
+        },
+        "error": null,
+        "tool": "generate_script"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "save_plan"
+    },
+    {
+      "step": 6,
+      "action": "save_plan",
+      "args": {
+        "topic": "城市夜跑社群招募",
+        "variant_id": "full",
+        "material_ids": [
+          "m001"
+        ],
+        "cost_total": 10.2,
+        "script": {
+          "title": "城市夜跑社群招募｜完整版脚本",
+          "tone": "热血",
+          "duration_s": 60,
+          "shots": [
+            {
+              "shot": 1,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "用 3 秒把「城市夜跑社群招募」说清楚——从城市夜景延时开始。",
+              "on_screen_text": "城市夜跑社群招募 · 1"
+            },
+            {
+              "shot": 2,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 2 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 2"
+            },
+            {
+              "shot": 3,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 3 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 3"
+            },
+            {
+              "shot": 4,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 4 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 4"
+            },
+            {
+              "shot": 5,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "第 5 镜头承接城市夜景延时，推进情绪。",
+              "on_screen_text": "城市夜跑社群招募 · 5"
+            },
+            {
+              "shot": 6,
+              "visual": "城市夜景延时",
+              "seconds": 10.0,
+              "voiceover": "收尾落回「城市夜跑社群招募」，一句行动号召。",
+              "on_screen_text": "城市夜跑社群招募 · 6"
+            }
+          ]
+        }
+      },
+      "decision_basis": "脚本已就绪（partial），保存方案",
+      "observation": {
+        "status": "ok",
+        "summary": "方案已保存 plan_15ed4383c1（10.2 模拟单位）",
+        "data": {
+          "plan_id": "plan_15ed4383c1",
+          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
+          "deduped": false,
+          "saved_at": "2026-10-28 15:41:51"
+        },
+        "error": null,
+        "tool": "save_plan"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "finish"
+    },
+    {
+      "step": 7,
+      "action": "finish",
+      "args": {
+        "status": "COMPLETED",
+        "reason": "方案已保存 plan_15ed4383c1"
+      },
+      "decision_basis": "方案落盘成功，任务完成",
+      "observation": {
+        "status": "terminal",
+        "summary": "COMPLETED：方案已保存 plan_15ed4383c1"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "结束"
+    }
+  ],
+  "last_observation": {
+    "status": "ok",
+    "summary": "方案已保存 plan_15ed4383c1（10.2 模拟单位）",
+    "data": {
+      "plan_id": "plan_15ed4383c1",
+      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
+      "deduped": false,
+      "saved_at": "2026-10-28 15:41:51"
+    },
+    "error": null,
+    "tool": "save_plan"
+  }
+}

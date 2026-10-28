@@ -1,0 +1,49 @@
+==============================================================================
+run_id : case-03     planner: mock-policy
+需求   : 考研自习室直播预告｜预算 10.0｜截止 2026-11-05 12:00｜可用 11320.0 分钟
+------------------------------------------------------------------------------
+[ 1] request_input(missing_fields=<list:1>)
+     依据 : 缺少 budget，无法核算预算与工期，先向运营确认
+     观察 : terminal | 向运营索要：budget
+     之后 : list_plan_variants
+[ 2] list_plan_variants(topic=考研自习室直播预告)
+     依据 : 先取候选方案列表，费用必须逐项现算，不凭印象报价
+     观察 : ok | 可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)
+     之后 : estimate_cost
+[ 3] estimate_cost(variant_id=full)
+     依据 : 先按完整度优先，核算 full 的费用看是否落在预算内
+     观察 : ok | 完整版估算 12.0 模拟单位，约 12 分钟
+     之后 : estimate_cost
+[ 4] estimate_cost(variant_id=lite)
+     依据 : 完整版被否（费用 12.0 超预算 10.0），核算 lite 的费用看是否落在预算内
+     观察 : ok | 精简版估算 8.0 模拟单位，约 7 分钟
+     之后 : search_materials
+[ 5] search_materials(queries=<list:3>, limit=2)
+     依据 : 精简版 8.0 ≤ 预算 10.0、约 7 分钟可交付，选它并检索素材
+     观察 : ok | 命中 2/2 条：自习室台灯与书桌、直播间灯光布置
+     之后 : generate_script
+[ 6] generate_script(variant_id=lite, material_ids=<list:2>, tone=安静, topic=考研自习室直播预告)
+     依据 : 素材 2 条就绪，用 lite 生成脚本
+     观察 : ok | 生成脚本《考研自习室直播预告｜精简版脚本》，3 个镜头
+     之后 : save_plan
+[ 7] save_plan(topic=考研自习室直播预告, variant_id=lite, material_ids=<list:2>, cost_total=8.0, script=<dict:4>)
+     依据 : 脚本已就绪（ok），保存方案
+     观察 : ok | 方案已保存 plan_139ae1abe5（8.0 模拟单位）
+     之后 : finish
+[ 8] finish(status=COMPLETED, reason=方案已保存 plan_139ae1abe5)
+     依据 : 方案落盘成功，任务完成
+     观察 : terminal | COMPLETED：方案已保存 plan_139ae1abe5
+     之后 : 结束
+------------------------------------------------------------------------------
+选定方案: 精简版（lite）费用 8.0 模拟单位，约 7 分钟
+   - 素材授权        1.2  (2 条 × 0.6)
+   - 脚本撰写        2.0  (基础 1.0 + 1 个 30 秒段 × 1.0)
+   - 配音          1.1  (基础 0.5 + 1 个 30 秒段 × 0.6)
+   - 剪辑合成        3.2  (基础 2.0 + 3 镜头 × 0.4)
+   - 内容审核        0.5  (固定审核费)
+被否方案:
+   - full: 费用 12.0 超预算 10.0
+落盘方案: plan_139ae1abe5 -> C:\Users\admin\WorkBuddy\Daily\xiaoying-agent\data\saved_plans\plan_139ae1abe5.json
+用量   : 8/12 步，6/12 次工具调用
+状态   : COMPLETED — 方案已保存 plan_139ae1abe5
+==============================================================================

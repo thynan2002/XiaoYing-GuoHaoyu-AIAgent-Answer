@@ -1,0 +1,173 @@
+{
+  "run_id": "case-08",
+  "planner": "mock-policy",
+  "status": "INCOMPLETE_LIMIT",
+  "status_reason": "达到最大步数 3，任务未完成；已保留：已否 1 个方案",
+  "task": {
+    "topic": "秋季校园咖啡新品推广",
+    "budget": 10.0,
+    "deadline": "2026-11-02 18:00",
+    "tone": "轻快",
+    "audience": "在校大学生",
+    "notes": "需要能直接投放的 30 秒左右成片",
+    "available_minutes": 7360.0,
+    "missing_fields": []
+  },
+  "limits": {
+    "max_steps": 3,
+    "max_tool_calls": 12
+  },
+  "steps": [
+    {
+      "step": 1,
+      "action": "list_plan_variants",
+      "args": {
+        "topic": "秋季校园咖啡新品推广"
+      },
+      "decision_basis": "先取候选方案列表，费用必须逐项现算，不凭印象报价",
+      "observation": {
+        "status": "ok",
+        "summary": "可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)",
+        "data": {
+          "variants": [
+            {
+              "variant_id": "full",
+              "label": "完整版",
+              "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+              "duration_s": 60,
+              "material_items": 4
+            },
+            {
+              "variant_id": "lite",
+              "label": "精简版",
+              "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+              "duration_s": 30,
+              "material_items": 2
+            },
+            {
+              "variant_id": "micro",
+              "label": "极简版",
+              "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+              "duration_s": 15,
+              "material_items": 1
+            }
+          ]
+        },
+        "error": null,
+        "tool": "list_plan_variants"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 2,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "full"
+      },
+      "decision_basis": "先按完整度优先，核算 full 的费用看是否落在预算内",
+      "observation": {
+        "status": "ok",
+        "summary": "完整版估算 12.0 模拟单位，约 12 分钟",
+        "data": {
+          "variant_id": "full",
+          "label": "完整版",
+          "duration_s": 60,
+          "material_items": 4,
+          "shots": 6,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 2.4,
+              "detail": "4 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 3.0,
+              "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.7,
+              "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 4.4,
+              "detail": "基础 2.0 + 6 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "total": 12.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 12
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 3,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "lite"
+      },
+      "decision_basis": "完整版被否（费用 12.0 超预算 10.0），核算 lite 的费用看是否落在预算内",
+      "observation": {
+        "status": "ok",
+        "summary": "精简版估算 8.0 模拟单位，约 7 分钟",
+        "data": {
+          "variant_id": "lite",
+          "label": "精简版",
+          "duration_s": 30,
+          "material_items": 2,
+          "shots": 3,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 1.2,
+              "detail": "2 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 2.0,
+              "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.1,
+              "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 3.2,
+              "detail": "基础 2.0 + 3 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "total": 8.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 7
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "结束"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+-m src.cli run --input examples/inputs/04-tool-failure.json --run-id case-04 --fail-tool generate_script --fail-times 2 --fail-mode error --out examples/case-04-tool-failure-degrade --now 2026-10-28 15:00

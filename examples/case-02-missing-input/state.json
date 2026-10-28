@@ -1,0 +1,43 @@
+{
+  "run_id": "case-02",
+  "planner": "mock-policy",
+  "task": {
+    "topic": "考研自习室直播预告",
+    "budget": null,
+    "deadline": "2026-11-05 12:00",
+    "tone": "安静",
+    "audience": "备考学生",
+    "notes": "运营没说预算，只说先出个方案",
+    "available_minutes": 11320.0,
+    "missing_fields": [
+      "budget"
+    ]
+  },
+  "step": 1,
+  "tool_calls": 0,
+  "scratch": {
+    "requested_input": [
+      "budget"
+    ]
+  },
+  "status": "NEED_INPUT",
+  "status_reason": "缺少必要信息：budget；补齐后可用 resume 从检查点续跑",
+  "steps": [
+    {
+      "step": 1,
+      "action": "request_input",
+      "args": {
+        "missing_fields": [
+          "budget"
+        ]
+      },
+      "decision_basis": "缺少 budget，无法核算预算与工期，先向运营确认",
+      "observation": {
+        "status": "terminal",
+        "summary": "向运营索要：budget"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "等待运营补充信息"
+    }
+  ]
+}

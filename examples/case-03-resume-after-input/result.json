@@ -1,0 +1,128 @@
+{
+  "run_id": "case-03",
+  "planner": "mock-policy",
+  "status": "COMPLETED",
+  "status_reason": "方案已保存 plan_139ae1abe5",
+  "task": {
+    "topic": "考研自习室直播预告",
+    "budget": 10.0,
+    "deadline": "2026-11-05 12:00",
+    "tone": "安静",
+    "audience": "备考学生",
+    "notes": "运营没说预算，只说先出个方案",
+    "available_minutes": 11320.0,
+    "missing_fields": []
+  },
+  "plan": {
+    "variant_id": "lite",
+    "label": "精简版",
+    "cost_total": 8.0,
+    "currency": "模拟单位",
+    "estimated_minutes": 7,
+    "breakdown": [
+      {
+        "item": "素材授权",
+        "amount": 1.2,
+        "detail": "2 条 × 0.6"
+      },
+      {
+        "item": "脚本撰写",
+        "amount": 2.0,
+        "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+      },
+      {
+        "item": "配音",
+        "amount": 1.1,
+        "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+      },
+      {
+        "item": "剪辑合成",
+        "amount": 3.2,
+        "detail": "基础 2.0 + 3 镜头 × 0.4"
+      },
+      {
+        "item": "内容审核",
+        "amount": 0.5,
+        "detail": "固定审核费"
+      }
+    ],
+    "material_ids": [
+      "m011",
+      "m012"
+    ],
+    "script_title": "考研自习室直播预告｜精简版脚本"
+  },
+  "rejected": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    }
+  ],
+  "last_observation": {
+    "status": "ok",
+    "summary": "方案已保存 plan_139ae1abe5（8.0 模拟单位）",
+    "data": {
+      "plan_id": "plan_139ae1abe5",
+      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_139ae1abe5.json",
+      "deduped": false,
+      "saved_at": "2026-10-28 15:41:50"
+    },
+    "error": null,
+    "tool": "save_plan"
+  },
+  "saved_plan": {
+    "plan_id": "plan_139ae1abe5",
+    "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_139ae1abe5.json",
+    "deduped": false
+  },
+  "artifacts": {
+    "materials": [
+      {
+        "id": "m011",
+        "title": "自习室台灯与书桌"
+      },
+      {
+        "id": "m012",
+        "title": "直播间灯光布置"
+      }
+    ],
+    "script": {
+      "title": "考研自习室直播预告｜精简版脚本",
+      "tone": "安静",
+      "duration_s": 30,
+      "shots": [
+        {
+          "shot": 1,
+          "visual": "自习室台灯与书桌",
+          "seconds": 10.0,
+          "voiceover": "用 3 秒把「考研自习室直播预告」说清楚——从自习室台灯与书桌开始。",
+          "on_screen_text": "考研自习室直播预告 · 1"
+        },
+        {
+          "shot": 2,
+          "visual": "直播间灯光布置",
+          "seconds": 10.0,
+          "voiceover": "第 2 镜头承接直播间灯光布置，推进情绪。",
+          "on_screen_text": "考研自习室直播预告 · 2"
+        },
+        {
+          "shot": 3,
+          "visual": "自习室台灯与书桌",
+          "seconds": 10.0,
+          "voiceover": "收尾落回「考研自习室直播预告」，一句行动号召。",
+          "on_screen_text": "考研自习室直播预告 · 3"
+        }
+      ]
+    },
+    "script_status": "ok"
+  },
+  "usage": {
+    "steps": 8,
+    "max_steps": 12,
+    "tool_calls": 6,
+    "max_tool_calls": 12,
+    "elapsed_ms": 10
+  }
+}

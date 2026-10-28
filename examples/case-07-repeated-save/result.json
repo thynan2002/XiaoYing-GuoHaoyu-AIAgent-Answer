@@ -1,0 +1,128 @@
+{
+  "run_id": "case-07",
+  "planner": "mock-policy",
+  "status": "COMPLETED",
+  "status_reason": "方案已保存 plan_aa0a4621d5（幂等命中，未重复写入）",
+  "task": {
+    "topic": "秋季校园咖啡新品推广",
+    "budget": 10.0,
+    "deadline": "2026-11-02 18:00",
+    "tone": "轻快",
+    "audience": "在校大学生",
+    "notes": "需要能直接投放的 30 秒左右成片",
+    "available_minutes": 7360.0,
+    "missing_fields": []
+  },
+  "plan": {
+    "variant_id": "lite",
+    "label": "精简版",
+    "cost_total": 8.0,
+    "currency": "模拟单位",
+    "estimated_minutes": 7,
+    "breakdown": [
+      {
+        "item": "素材授权",
+        "amount": 1.2,
+        "detail": "2 条 × 0.6"
+      },
+      {
+        "item": "脚本撰写",
+        "amount": 2.0,
+        "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+      },
+      {
+        "item": "配音",
+        "amount": 1.1,
+        "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+      },
+      {
+        "item": "剪辑合成",
+        "amount": 3.2,
+        "detail": "基础 2.0 + 3 镜头 × 0.4"
+      },
+      {
+        "item": "内容审核",
+        "amount": 0.5,
+        "detail": "固定审核费"
+      }
+    ],
+    "material_ids": [
+      "m002",
+      "m003"
+    ],
+    "script_title": "秋季校园咖啡新品推广｜精简版脚本"
+  },
+  "rejected": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    }
+  ],
+  "last_observation": {
+    "status": "ok",
+    "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入",
+    "data": {
+      "plan_id": "plan_aa0a4621d5",
+      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+      "deduped": true,
+      "saved_at": "2026-10-28 15:41:52"
+    },
+    "error": null,
+    "tool": "save_plan"
+  },
+  "saved_plan": {
+    "plan_id": "plan_aa0a4621d5",
+    "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+    "deduped": true
+  },
+  "artifacts": {
+    "materials": [
+      {
+        "id": "m002",
+        "title": "咖啡店手冲特写"
+      },
+      {
+        "id": "m003",
+        "title": "校园晨跑"
+      }
+    ],
+    "script": {
+      "title": "秋季校园咖啡新品推广｜精简版脚本",
+      "tone": "轻快",
+      "duration_s": 30,
+      "shots": [
+        {
+          "shot": 1,
+          "visual": "咖啡店手冲特写",
+          "seconds": 10.0,
+          "voiceover": "用 3 秒把「秋季校园咖啡新品推广」说清楚——从咖啡店手冲特写开始。",
+          "on_screen_text": "秋季校园咖啡新品推广 · 1"
+        },
+        {
+          "shot": 2,
+          "visual": "校园晨跑",
+          "seconds": 10.0,
+          "voiceover": "第 2 镜头承接校园晨跑，推进情绪。",
+          "on_screen_text": "秋季校园咖啡新品推广 · 2"
+        },
+        {
+          "shot": 3,
+          "visual": "咖啡店手冲特写",
+          "seconds": 10.0,
+          "voiceover": "收尾落回「秋季校园咖啡新品推广」，一句行动号召。",
+          "on_screen_text": "秋季校园咖啡新品推广 · 3"
+        }
+      ]
+    },
+    "script_status": "ok"
+  },
+  "usage": {
+    "steps": 7,
+    "max_steps": 12,
+    "tool_calls": 6,
+    "max_tool_calls": 12,
+    "elapsed_ms": 11
+  }
+}

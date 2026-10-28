@@ -1,0 +1,1 @@
+-m src.cli run --input examples/inputs/05-partial-materials.json --run-id case-05 --fail-tool search_materials --fail-times 1 --fail-mode partial --out examples/case-05-partial-materials --now 2026-10-28 15:00

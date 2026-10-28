@@ -1,0 +1,1 @@
+-m src.cli run --input examples/inputs/06-budget-exceeded.json --run-id case-06 --out examples/case-06-budget-exceeded --now 2026-10-28 15:00

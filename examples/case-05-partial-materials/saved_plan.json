@@ -1,0 +1,89 @@
+{
+  "plan_id": "plan_15ed4383c1",
+  "topic": "城市夜跑社群招募",
+  "variant_id": "full",
+  "variant_label": "完整版",
+  "material_ids": [
+    "m001"
+  ],
+  "cost_total": 10.2,
+  "currency": "模拟单位",
+  "breakdown": [
+    {
+      "item": "素材授权",
+      "amount": 0.6,
+      "detail": "1 条 × 0.6"
+    },
+    {
+      "item": "脚本撰写",
+      "amount": 3.0,
+      "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+    },
+    {
+      "item": "配音",
+      "amount": 1.7,
+      "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+    },
+    {
+      "item": "剪辑合成",
+      "amount": 4.4,
+      "detail": "基础 2.0 + 6 镜头 × 0.4"
+    },
+    {
+      "item": "内容审核",
+      "amount": 0.5,
+      "detail": "固定审核费"
+    }
+  ],
+  "estimated_minutes": 9,
+  "script": {
+    "title": "城市夜跑社群招募｜完整版脚本",
+    "tone": "热血",
+    "duration_s": 60,
+    "shots": [
+      {
+        "shot": 1,
+        "visual": "城市夜景延时",
+        "seconds": 10.0,
+        "voiceover": "用 3 秒把「城市夜跑社群招募」说清楚——从城市夜景延时开始。",
+        "on_screen_text": "城市夜跑社群招募 · 1"
+      },
+      {
+        "shot": 2,
+        "visual": "城市夜景延时",
+        "seconds": 10.0,
+        "voiceover": "第 2 镜头承接城市夜景延时，推进情绪。",
+        "on_screen_text": "城市夜跑社群招募 · 2"
+      },
+      {
+        "shot": 3,
+        "visual": "城市夜景延时",
+        "seconds": 10.0,
+        "voiceover": "第 3 镜头承接城市夜景延时，推进情绪。",
+        "on_screen_text": "城市夜跑社群招募 · 3"
+      },
+      {
+        "shot": 4,
+        "visual": "城市夜景延时",
+        "seconds": 10.0,
+        "voiceover": "第 4 镜头承接城市夜景延时，推进情绪。",
+        "on_screen_text": "城市夜跑社群招募 · 4"
+      },
+      {
+        "shot": 5,
+        "visual": "城市夜景延时",
+        "seconds": 10.0,
+        "voiceover": "第 5 镜头承接城市夜景延时，推进情绪。",
+        "on_screen_text": "城市夜跑社群招募 · 5"
+      },
+      {
+        "shot": 6,
+        "visual": "城市夜景延时",
+        "seconds": 10.0,
+        "voiceover": "收尾落回「城市夜跑社群招募」，一句行动号召。",
+        "on_screen_text": "城市夜跑社群招募 · 6"
+      }
+    ]
+  },
+  "saved_at": "2026-10-28 15:41:51"
+}
