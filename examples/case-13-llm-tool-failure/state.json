@@ -1,0 +1,828 @@
+{
+  "run_id": "case-13",
+  "planner": "llm",
+  "task": {
+    "topic": "双十一数码开箱合集",
+    "budget": 14.0,
+    "deadline": "2026-11-08 20:00",
+    "tone": "利落",
+    "audience": "数码爱好者",
+    "notes": "LLM 规划器路径下的工具失败：脚本服务连续失败两次，观察它是否降级并保留已完成结果",
+    "available_minutes": 16120.0,
+    "missing_fields": []
+  },
+  "step": 10,
+  "tool_calls": 9,
+  "scratch": {
+    "history": [
+      {
+        "action": "list_plan_variants",
+        "basis": "先拿候选方案，费用需现算"
+      },
+      {
+        "action": "estimate_cost",
+        "basis": "按完整度优先核算 full"
+      },
+      {
+        "action": "search_materials",
+        "basis": "完整版 12.0 在预算 14.0 内、12 分钟可交付，选它"
+      },
+      {
+        "action": "estimate_cost",
+        "basis": "只拿到 2/4 条素材，按实际条数重新核算"
+      },
+      {
+        "action": "generate_script",
+        "basis": "按实际 2 条素材重算为 10.8，仍可行，直接写脚本"
+      },
+      {
+        "action": "generate_script",
+        "basis": "脚本失败（generate_script 返回 503（注入故障）），同参数重试第 1 次"
+      },
+      {
+        "action": "estimate_cost",
+        "basis": "full 连续失败 2 次，放弃它，改算 lite"
+      },
+      {
+        "action": "generate_script",
+        "basis": "按实际 2 条素材重算为 8.0，仍可行，直接写脚本"
+      },
+      {
+        "action": "save_plan",
+        "basis": "脚本已生成，保存方案"
+      },
+      {
+        "action": "finish",
+        "basis": "落盘成功"
+      }
+    ],
+    "progress": {
+      "list_plan_variants": {
+        "variants": [
+          {
+            "variant_id": "full",
+            "label": "完整版",
+            "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+            "duration_s": 60,
+            "material_items": 4
+          },
+          {
+            "variant_id": "lite",
+            "label": "精简版",
+            "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+            "duration_s": 30,
+            "material_items": 2
+          },
+          {
+            "variant_id": "micro",
+            "label": "极简版",
+            "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+            "duration_s": 15,
+            "material_items": 1
+          }
+        ]
+      },
+      "estimate_cost": {
+        "variant_id": "lite",
+        "label": "精简版",
+        "duration_s": 30,
+        "material_items": 2,
+        "shots": 3,
+        "voice": true,
+        "review": true,
+        "breakdown": [
+          {
+            "item": "素材授权",
+            "amount": 1.2,
+            "detail": "2 条 × 0.6"
+          },
+          {
+            "item": "脚本撰写",
+            "amount": 2.0,
+            "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+          },
+          {
+            "item": "配音",
+            "amount": 1.1,
+            "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+          },
+          {
+            "item": "剪辑合成",
+            "amount": 3.2,
+            "detail": "基础 2.0 + 3 镜头 × 0.4"
+          },
+          {
+            "item": "内容审核",
+            "amount": 0.5,
+            "detail": "固定审核费"
+          }
+        ],
+        "outline": [
+          {
+            "no": 1,
+            "task": "素材检索与授权",
+            "seconds": 120,
+            "minutes": 2.0,
+            "cost_items": [
+              "素材授权"
+            ],
+            "cost": 1.2
+          },
+          {
+            "no": 2,
+            "task": "脚本撰写（含配音文案）",
+            "seconds": 45,
+            "minutes": 0.8,
+            "cost_items": [
+              "脚本撰写",
+              "配音"
+            ],
+            "cost": 3.1
+          },
+          {
+            "no": 3,
+            "task": "剪辑合成（含配音合成）",
+            "seconds": 195,
+            "minutes": 3.2,
+            "cost_items": [
+              "剪辑合成"
+            ],
+            "cost": 3.2
+          },
+          {
+            "no": 4,
+            "task": "内容审核",
+            "seconds": 30,
+            "minutes": 0.5,
+            "cost_items": [
+              "内容审核"
+            ],
+            "cost": 0.5
+          }
+        ],
+        "total": 8.0,
+        "currency": "模拟单位",
+        "estimated_minutes": 7
+      },
+      "search_materials": {
+        "items": [
+          {
+            "id": "m010",
+            "title": "产品开箱特写",
+            "type": "video",
+            "duration_s": 11,
+            "tags": [
+              "产品",
+              "开箱",
+              "数码",
+              "特写"
+            ]
+          },
+          {
+            "id": "m013",
+            "title": "数码产品细节摇镜",
+            "type": "video",
+            "duration_s": 7,
+            "tags": [
+              "数码",
+              "产品",
+              "细节",
+              "质感"
+            ]
+          }
+        ],
+        "requested": 4,
+        "returned": 2,
+        "degraded": true,
+        "queries": [
+          "双十一数码开箱合集"
+        ]
+      },
+      "generate_script": {
+        "script": {
+          "title": "双十一数码开箱合集｜精简版脚本",
+          "tone": "利落",
+          "duration_s": 30,
+          "shots": [
+            {
+              "shot": 1,
+              "visual": "产品开箱特写",
+              "seconds": 10.0,
+              "voiceover": "用 3 秒把「双十一数码开箱合集」说清楚——从产品开箱特写开始。",
+              "on_screen_text": "双十一数码开箱合集 · 1"
+            },
+            {
+              "shot": 2,
+              "visual": "数码产品细节摇镜",
+              "seconds": 10.0,
+              "voiceover": "第 2 镜头承接数码产品细节摇镜，推进情绪。",
+              "on_screen_text": "双十一数码开箱合集 · 2"
+            },
+            {
+              "shot": 3,
+              "visual": "产品开箱特写",
+              "seconds": 10.0,
+              "voiceover": "收尾落回「双十一数码开箱合集」，一句行动号召。",
+              "on_screen_text": "双十一数码开箱合集 · 3"
+            }
+          ]
+        },
+        "reused": false
+      },
+      "save_plan": {
+        "plan_id": "plan_786a532b33",
+        "path": "data/saved_plans/case-13/plan_786a532b33.json",
+        "deduped": false,
+        "saved_at": "2026-10-28 16:25:35"
+      }
+    }
+  },
+  "rejected_auto": [
+    {
+      "variant": "full",
+      "reason": "generate_script 连续失败 2 次，放弃该方案",
+      "cost": 10.8
+    }
+  ],
+  "status": "COMPLETED",
+  "status_reason": "方案已保存 plan_786a532b33",
+  "steps": [
+    {
+      "step": 1,
+      "action": "list_plan_variants",
+      "args": {
+        "topic": "双十一数码开箱合集"
+      },
+      "decision_basis": "先拿候选方案，费用需现算",
+      "observation": {
+        "status": "ok",
+        "summary": "可用方案 3 个：完整版(full) / 精简版(lite) / 极简版(micro)",
+        "data": {
+          "variants": [
+            {
+              "variant_id": "full",
+              "label": "完整版",
+              "summary": "4 条素材 + 60 秒成片 + 配音 + 6 镜头，完整叙事",
+              "duration_s": 60,
+              "material_items": 4
+            },
+            {
+              "variant_id": "lite",
+              "label": "精简版",
+              "summary": "2 条素材 + 30 秒成片 + 配音 + 3 镜头",
+              "duration_s": 30,
+              "material_items": 2
+            },
+            {
+              "variant_id": "micro",
+              "label": "极简版",
+              "summary": "1 条素材 + 15 秒单镜头，无配音免审核",
+              "duration_s": 15,
+              "material_items": 1
+            }
+          ]
+        },
+        "error": null,
+        "tool": "list_plan_variants"
+      },
+      "elapsed_ms": 50,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 2,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "full"
+      },
+      "decision_basis": "按完整度优先核算 full",
+      "observation": {
+        "status": "ok",
+        "summary": "完整版估算 12.0 模拟单位，约 12 分钟",
+        "data": {
+          "variant_id": "full",
+          "label": "完整版",
+          "duration_s": 60,
+          "material_items": 4,
+          "shots": 6,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 2.4,
+              "detail": "4 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 3.0,
+              "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.7,
+              "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 4.4,
+              "detail": "基础 2.0 + 6 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 240,
+              "minutes": 4.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 2.4
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
+          "total": 12.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 12
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 45,
+      "follow_up": "search_materials"
+    },
+    {
+      "step": 3,
+      "action": "search_materials",
+      "args": {
+        "queries": [
+          "双十一数码开箱合集"
+        ],
+        "limit": 4
+      },
+      "decision_basis": "完整版 12.0 在预算 14.0 内、12 分钟可交付，选它",
+      "observation": {
+        "status": "partial",
+        "summary": "命中 2/4 条：产品开箱特写、数码产品细节摇镜",
+        "data": {
+          "items": [
+            {
+              "id": "m010",
+              "title": "产品开箱特写",
+              "type": "video",
+              "duration_s": 11,
+              "tags": [
+                "产品",
+                "开箱",
+                "数码",
+                "特写"
+              ]
+            },
+            {
+              "id": "m013",
+              "title": "数码产品细节摇镜",
+              "type": "video",
+              "duration_s": 7,
+              "tags": [
+                "数码",
+                "产品",
+                "细节",
+                "质感"
+              ]
+            }
+          ],
+          "requested": 4,
+          "returned": 2,
+          "degraded": true,
+          "queries": [
+            "双十一数码开箱合集"
+          ]
+        },
+        "error": null,
+        "tool": "search_materials"
+      },
+      "elapsed_ms": 21,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 4,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "full",
+        "material_ids": [
+          "m010",
+          "m013"
+        ]
+      },
+      "decision_basis": "只拿到 2/4 条素材，按实际条数重新核算",
+      "observation": {
+        "status": "ok",
+        "summary": "完整版估算 10.8 模拟单位，约 10 分钟",
+        "data": {
+          "variant_id": "full",
+          "label": "完整版",
+          "duration_s": 60,
+          "material_items": 2,
+          "shots": 6,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 1.2,
+              "detail": "2 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 3.0,
+              "detail": "基础 1.0 + 2 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.7,
+              "detail": "基础 0.5 + 2 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 4.4,
+              "detail": "基础 2.0 + 6 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 120,
+              "minutes": 2.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 1.2
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 4.7
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 375,
+              "minutes": 6.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 4.4
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
+          "total": 10.8,
+          "currency": "模拟单位",
+          "estimated_minutes": 10
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 37,
+      "follow_up": "generate_script"
+    },
+    {
+      "step": 5,
+      "action": "generate_script",
+      "args": {
+        "variant_id": "full",
+        "material_ids": [
+          "m010",
+          "m013"
+        ],
+        "tone": "利落",
+        "topic": "双十一数码开箱合集"
+      },
+      "decision_basis": "按实际 2 条素材重算为 10.8，仍可行，直接写脚本",
+      "observation": {
+        "status": "error",
+        "summary": "generate_script 失败：generate_script 返回 503（注入故障）",
+        "data": {},
+        "error": "generate_script 返回 503（注入故障）",
+        "tool": "generate_script"
+      },
+      "elapsed_ms": 21,
+      "follow_up": "generate_script"
+    },
+    {
+      "step": 6,
+      "action": "generate_script",
+      "args": {
+        "variant_id": "full",
+        "material_ids": [
+          "m010",
+          "m013"
+        ],
+        "tone": "利落",
+        "topic": "双十一数码开箱合集"
+      },
+      "decision_basis": "脚本失败（generate_script 返回 503（注入故障）），同参数重试第 1 次",
+      "observation": {
+        "status": "error",
+        "summary": "generate_script 失败：generate_script 返回 503（注入故障）",
+        "data": {},
+        "error": "generate_script 返回 503（注入故障）",
+        "tool": "generate_script"
+      },
+      "elapsed_ms": 23,
+      "follow_up": "estimate_cost"
+    },
+    {
+      "step": 7,
+      "action": "estimate_cost",
+      "args": {
+        "variant_id": "lite"
+      },
+      "decision_basis": "full 连续失败 2 次，放弃它，改算 lite",
+      "observation": {
+        "status": "ok",
+        "summary": "精简版估算 8.0 模拟单位，约 7 分钟",
+        "data": {
+          "variant_id": "lite",
+          "label": "精简版",
+          "duration_s": 30,
+          "material_items": 2,
+          "shots": 3,
+          "voice": true,
+          "review": true,
+          "breakdown": [
+            {
+              "item": "素材授权",
+              "amount": 1.2,
+              "detail": "2 条 × 0.6"
+            },
+            {
+              "item": "脚本撰写",
+              "amount": 2.0,
+              "detail": "基础 1.0 + 1 个 30 秒段 × 1.0"
+            },
+            {
+              "item": "配音",
+              "amount": 1.1,
+              "detail": "基础 0.5 + 1 个 30 秒段 × 0.6"
+            },
+            {
+              "item": "剪辑合成",
+              "amount": 3.2,
+              "detail": "基础 2.0 + 3 镜头 × 0.4"
+            },
+            {
+              "item": "内容审核",
+              "amount": 0.5,
+              "detail": "固定审核费"
+            }
+          ],
+          "outline": [
+            {
+              "no": 1,
+              "task": "素材检索与授权",
+              "seconds": 120,
+              "minutes": 2.0,
+              "cost_items": [
+                "素材授权"
+              ],
+              "cost": 1.2
+            },
+            {
+              "no": 2,
+              "task": "脚本撰写（含配音文案）",
+              "seconds": 45,
+              "minutes": 0.8,
+              "cost_items": [
+                "脚本撰写",
+                "配音"
+              ],
+              "cost": 3.1
+            },
+            {
+              "no": 3,
+              "task": "剪辑合成（含配音合成）",
+              "seconds": 195,
+              "minutes": 3.2,
+              "cost_items": [
+                "剪辑合成"
+              ],
+              "cost": 3.2
+            },
+            {
+              "no": 4,
+              "task": "内容审核",
+              "seconds": 30,
+              "minutes": 0.5,
+              "cost_items": [
+                "内容审核"
+              ],
+              "cost": 0.5
+            }
+          ],
+          "total": 8.0,
+          "currency": "模拟单位",
+          "estimated_minutes": 7
+        },
+        "error": null,
+        "tool": "estimate_cost"
+      },
+      "elapsed_ms": 44,
+      "follow_up": "generate_script"
+    },
+    {
+      "step": 8,
+      "action": "generate_script",
+      "args": {
+        "variant_id": "lite",
+        "material_ids": [
+          "m010",
+          "m013"
+        ],
+        "tone": "利落",
+        "topic": "双十一数码开箱合集"
+      },
+      "decision_basis": "按实际 2 条素材重算为 8.0，仍可行，直接写脚本",
+      "observation": {
+        "status": "ok",
+        "summary": "生成脚本《双十一数码开箱合集｜精简版脚本》，3 个镜头",
+        "data": {
+          "script": {
+            "title": "双十一数码开箱合集｜精简版脚本",
+            "tone": "利落",
+            "duration_s": 30,
+            "shots": [
+              {
+                "shot": 1,
+                "visual": "产品开箱特写",
+                "seconds": 10.0,
+                "voiceover": "用 3 秒把「双十一数码开箱合集」说清楚——从产品开箱特写开始。",
+                "on_screen_text": "双十一数码开箱合集 · 1"
+              },
+              {
+                "shot": 2,
+                "visual": "数码产品细节摇镜",
+                "seconds": 10.0,
+                "voiceover": "第 2 镜头承接数码产品细节摇镜，推进情绪。",
+                "on_screen_text": "双十一数码开箱合集 · 2"
+              },
+              {
+                "shot": 3,
+                "visual": "产品开箱特写",
+                "seconds": 10.0,
+                "voiceover": "收尾落回「双十一数码开箱合集」，一句行动号召。",
+                "on_screen_text": "双十一数码开箱合集 · 3"
+              }
+            ]
+          },
+          "reused": false
+        },
+        "error": null,
+        "tool": "generate_script"
+      },
+      "elapsed_ms": 45,
+      "follow_up": "save_plan"
+    },
+    {
+      "step": 9,
+      "action": "save_plan",
+      "args": {
+        "topic": "双十一数码开箱合集",
+        "variant_id": "lite",
+        "material_ids": [
+          "m010",
+          "m013"
+        ],
+        "cost_total": 8.0,
+        "script": {
+          "title": "双十一数码开箱合集｜精简版脚本",
+          "tone": "利落",
+          "duration_s": 30,
+          "shots": [
+            {
+              "shot": 1,
+              "visual": "产品开箱特写",
+              "seconds": 10.0,
+              "voiceover": "用 3 秒把「双十一数码开箱合集」说清楚——从产品开箱特写开始。",
+              "on_screen_text": "双十一数码开箱合集 · 1"
+            },
+            {
+              "shot": 2,
+              "visual": "数码产品细节摇镜",
+              "seconds": 10.0,
+              "voiceover": "第 2 镜头承接数码产品细节摇镜，推进情绪。",
+              "on_screen_text": "双十一数码开箱合集 · 2"
+            },
+            {
+              "shot": 3,
+              "visual": "产品开箱特写",
+              "seconds": 10.0,
+              "voiceover": "收尾落回「双十一数码开箱合集」，一句行动号召。",
+              "on_screen_text": "双十一数码开箱合集 · 3"
+            }
+          ]
+        }
+      },
+      "decision_basis": "脚本已生成，保存方案",
+      "observation": {
+        "status": "ok",
+        "summary": "方案已保存 plan_786a532b33（8.0 模拟单位）",
+        "data": {
+          "plan_id": "plan_786a532b33",
+          "path": "data/saved_plans/case-13/plan_786a532b33.json",
+          "deduped": false,
+          "saved_at": "2026-10-28 16:25:35"
+        },
+        "error": null,
+        "tool": "save_plan"
+      },
+      "elapsed_ms": 45,
+      "follow_up": "finish"
+    },
+    {
+      "step": 10,
+      "action": "finish",
+      "args": {
+        "status": "COMPLETED",
+        "reason": "方案已保存 plan_786a532b33"
+      },
+      "decision_basis": "落盘成功",
+      "observation": {
+        "status": "terminal",
+        "summary": "COMPLETED：方案已保存 plan_786a532b33"
+      },
+      "elapsed_ms": 0,
+      "follow_up": "结束"
+    }
+  ],
+  "resumed_from": 0,
+  "last_observation": {
+    "status": "ok",
+    "summary": "方案已保存 plan_786a532b33（8.0 模拟单位）",
+    "data": {
+      "plan_id": "plan_786a532b33",
+      "path": "data/saved_plans/case-13/plan_786a532b33.json",
+      "deduped": false,
+      "saved_at": "2026-10-28 16:25:35"
+    },
+    "error": null,
+    "tool": "save_plan"
+  },
+  "last_action": "save_plan",
+  "chosen_variant": "lite"
+}

@@ -41,6 +41,10 @@ class TestLLMDecisionParsing:
         with pytest.raises(PlannerError, match="args"):
             LLMPlanner._parse_decision('{"action": "estimate_cost", "args": ["lite"]}')
 
+    def test_missing_basis_gets_explicit_placeholder(self):
+        a = LLMPlanner._parse_decision('{"action": "finish", "args": {}}')
+        assert a.decision_basis == "模型未给出决策依据"
+
     def test_missing_api_key_fails_fast(self, monkeypatch):
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
         with pytest.raises(PlannerError, match="OPENAI_API_KEY"):

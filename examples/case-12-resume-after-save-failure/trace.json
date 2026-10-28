@@ -528,14 +528,14 @@
         "summary": "方案已保存 plan_7a0cef58ae（8.0 模拟单位）",
         "data": {
           "plan_id": "plan_7a0cef58ae",
-          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_7a0cef58ae.json",
+          "path": "data/saved_plans/plan_7a0cef58ae.json",
           "deduped": false,
-          "saved_at": "2026-10-28 16:05:17"
+          "saved_at": "2026-10-28 16:25:35"
         },
         "error": null,
         "tool": "save_plan"
       },
-      "elapsed_ms": 0,
+      "elapsed_ms": 1,
       "follow_up": "finish"
     },
     {

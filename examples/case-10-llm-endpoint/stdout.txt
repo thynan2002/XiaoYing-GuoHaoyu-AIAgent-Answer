@@ -24,7 +24,7 @@ run_id : case-10     planner: llm
      之后 : save_plan
 [ 6] save_plan(topic=秋季校园咖啡新品推广, variant_id=lite, material_ids=<list:2>, cost_total=8.0, script=<dict:4>)
      依据 : 脚本已生成，保存方案
-     观察 : ok | 方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入
+     观察 : ok | 方案已保存 plan_aa0a4621d5（8.0 模拟单位）
      之后 : finish
 [ 7] finish(status=COMPLETED, reason=方案已保存 plan_aa0a4621d5)
      依据 : 落盘成功
@@ -37,7 +37,9 @@ run_id : case-10     planner: llm
    - 配音          1.1  (基础 0.5 + 1 个 30 秒段 × 0.6)
    - 剪辑合成        3.2  (基础 2.0 + 3 镜头 × 0.4)
    - 内容审核        0.5  (固定审核费)
-落盘方案: plan_aa0a4621d5 -> C:\Users\admin\WorkBuddy\Daily\xiaoying-agent\data\saved_plans\plan_aa0a4621d5.json（幂等命中，未重复写入）
+被否方案:
+   - full: 费用 12.0 超预算 10.0
+落盘方案: plan_aa0a4621d5 -> data/saved_plans/case-10/plan_aa0a4621d5.json
 用量   : 7/12 步，6/12 次工具调用
 状态   : COMPLETED — 方案已保存 plan_aa0a4621d5
 ==============================================================================

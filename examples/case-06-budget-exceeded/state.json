@@ -212,6 +212,26 @@
       }
     ]
   },
+  "rejected_auto": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 4.0",
+      "cost": 12.0,
+      "minutes": 12
+    },
+    {
+      "variant": "lite",
+      "reason": "费用 8.0 超预算 4.0",
+      "cost": 8.0,
+      "minutes": 7
+    },
+    {
+      "variant": "micro",
+      "reason": "费用 5.0 超预算 4.0",
+      "cost": 5.0,
+      "minutes": 3
+    }
+  ],
   "status": "INCOMPLETE_BUDGET",
   "status_reason": "没有可行方案（预算 4.0，最低方案 5.0，缺口 1.0）：full:费用 12.0 超预算 4.0；lite:费用 8.0 超预算 4.0；micro:费用 5.0 超预算 4.0；已保留：已否 3 个方案",
   "steps": [

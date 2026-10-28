@@ -309,7 +309,7 @@
         "error": null,
         "tool": "search_materials"
       },
-      "elapsed_ms": 1,
+      "elapsed_ms": 0,
       "follow_up": "generate_script"
     },
     {
@@ -362,7 +362,7 @@
         "error": null,
         "tool": "generate_script"
       },
-      "elapsed_ms": 1,
+      "elapsed_ms": 0,
       "follow_up": "save_plan"
     },
     {
@@ -411,14 +411,14 @@
         "summary": "方案已保存 plan_aa0a4621d5（8.0 模拟单位）",
         "data": {
           "plan_id": "plan_aa0a4621d5",
-          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+          "path": "data/saved_plans/plan_aa0a4621d5.json",
           "deduped": false,
-          "saved_at": "2026-10-28 16:05:11"
+          "saved_at": "2026-10-28 16:25:31"
         },
         "error": null,
         "tool": "save_plan"
       },
-      "elapsed_ms": 1,
+      "elapsed_ms": 0,
       "follow_up": "finish"
     },
     {

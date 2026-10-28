@@ -1,8 +1,9 @@
 # examples · 实施例索引
 
 每个目录都是**真实运行产物**（`python scripts/gen_examples.py` 可原样重跑），
-不是手写的预期结果。重跑后 `elapsed_ms`、`saved_at` 会随机器/时刻变化，
+不是手写的预期结果。重跑后 `elapsed_ms`、`saved_at`、LLM 本地端点的随机端口会变，
 其余字段（动作序列、参数、费用、状态、决策依据）逐条一致——这也是判断"可复现"的口径。
+`gen_examples.py` 会在最后核对 13 个用例的状态与退出码，任一不符即返回 1。
 
 目录结构统一：
 
@@ -15,12 +16,13 @@
 | `trace.json` | 逐步轨迹：`step / action / args / decision_basis / observation / follow_up` |
 | `state.json` | 该次运行的检查点（可被 `resume` 读取） |
 | `saved_plan.json` | 仅成功用例：落盘方案副本（含脚本与费用明细） |
+| `env.txt` | 仅 LLM 用例（`case-10` / `case-13`）：本地 OpenAI 兼容端点的环境变量（端口每次重跑会变） |
 
 ## 用例表
 
 | 目录 | 场景 | 状态 | 关键数字 |
 | --- | --- | --- | --- |
-| `case-01-normal` | 预算 10，完整版 12 超支 | COMPLETED | full 12.0 否决 → lite 8.0 交付 |
+| `case-01-normal` | 预算 10，完整版 12 超支 | COMPLETED | full 12.0 否决 → lite 8.0 交付，7 步 |
 | `case-02-missing-input` | 没给预算 | NEED_INPUT | 1 步 0 次工具调用，退出码 3 |
 | `case-03-resume-after-input` | 补预算后续跑 | COMPLETED | 8 步（含前次 1 步），复用已检索素材 |
 | `case-04-tool-failure-degrade` | 脚本工具连续 2 次 503 | COMPLETED | full 10.8 → 失败 ×2 → lite 8.0，11 步 |
@@ -29,27 +31,31 @@
 | `case-07-repeated-save` | 与 case-01 完全同输入 | COMPLETED | `deduped: true`，未写第二份 |
 | `case-08-step-limit` | `--max-steps 3` | INCOMPLETE_LIMIT | 3/3 步，理由含已否方案 |
 | `case-09-tight-deadline` | 可用 10 分钟 | COMPLETED | full 12 min 超时 → lite 7 min 交付 |
-| `case-10-llm-endpoint` | `--planner llm` 接本地兼容端点 | COMPLETED | 真 HTTP + 真解析，7 步，12.0 → 8.0 |
+| `case-10-llm-endpoint` | `--planner llm` 接本地兼容端点 | COMPLETED | 真 HTTP + 真解析，7 步，12.0 → 8.0，独立 plan-dir 落盘 |
+| `case-13-llm-tool-failure` | 同一 LLM 路径注入脚本失败 ×2 | COMPLETED | full 12.0 → 2/4 素材重算 10.8 → 失败 ×2 → lite 8.0，10 步 |
 | `case-11-save-failure` | 落盘持续 503 | INCOMPLETE_SAVE | 8 步；素材/脚本/费用都保留 |
 | `case-12-resume-after-save-failure` | 承接 11 的检查点续跑 | COMPLETED | 第 9 步直接 save_plan，检索/脚本不重跑 |
 
 ## 快速自查
 
 ```bash
+# 一次性核对 13 个实施例的状态、交付字段与 trace 完整性（不联网）
+python scripts/verify_submission.py
+
 # 预算被否后改方案（看第 3 步依据里的数字）
-python -c "import json;t=json.load(open('examples/case-01-normal/trace.json'));[print(s['step'],s['action'],s['observation']['status'],'|',s['decision_basis']) for s in t['steps'][:4]]"
+python -c "import json;t=json.load(open('examples/case-01-normal/trace.json',encoding='utf-8'));[print(s['step'],s['action'],s['observation']['status'],'|',s['decision_basis']) for s in t['steps'][:4]]"
 
 # 工具失败后是否调整计划
-python -c "import json;t=json.load(open('examples/case-04-tool-failure-degrade/trace.json'));[print(s['step'],s['action'],s['observation']['status'],'|',s['decision_basis']) for s in t['steps'][4:8]]"
+python -c "import json;t=json.load(open('examples/case-04-tool-failure-degrade/trace.json',encoding='utf-8'));[print(s['step'],s['action'],s['observation']['status'],'|',s['decision_basis']) for s in t['steps'][4:8]]"
 
 # 未完成原因与缺口
-python -c "import json;r=json.load(open('examples/case-06-budget-exceeded/result.json'));print(r['status'],r['status_reason'])"
+python -c "import json;r=json.load(open('examples/case-06-budget-exceeded/result.json',encoding='utf-8'));print(r['status'],r['status_reason'])"
 
 # 续跑是不是真的只补失败那步
-python -c "import json;t=json.load(open('examples/case-12-resume-after-save-failure/trace.json'));print([(s['step'],s['action']) for s in t['steps'] if s['step']>=8])"
+python -c "import json;t=json.load(open('examples/case-12-resume-after-save-failure/trace.json',encoding='utf-8'));print([(s['step'],s['action']) for s in t['steps'] if s['step']>=8])"
 
 # 任务计划与费用是否自洽
-python -c "import json;r=json.load(open('examples/case-01-normal/result.json'));print([(o['task'],o['minutes'],o['cost']) for o in r['plan']['outline']], r['plan']['cost_total'])"
+python -c "import json;r=json.load(open('examples/case-01-normal/result.json',encoding='utf-8'));print([(o['task'],o['minutes'],o['cost']) for o in r['plan']['outline']], r['plan']['cost_total'])"
 ```
 
-`tests-output.txt` 是 `python -m pytest tests -q` 的完整输出（49 passed）。
+`tests-output.txt` 是 `python -m pytest tests -q` 的完整输出（56 passed）。

@@ -223,6 +223,14 @@
       }
     ]
   },
+  "rejected_auto": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    }
+  ],
   "status": "INCOMPLETE_LIMIT",
   "status_reason": "达到最大步数 3，任务未完成；已保留：已否 1 个方案",
   "steps": [

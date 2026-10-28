@@ -33,6 +33,9 @@ class DecisionContext:
     last_obs: Observation | None
     step: int
     same_tool_failures: int = 0
+    # 下面两项由 Agent 汇总，任何规划器都能读到，避免 LLM 规划器"看不见"被否方案
+    chosen_variant: str | None = None
+    rejected: list[dict] = field(default_factory=list)
 
 
 class PlannerError(Exception):
@@ -112,9 +115,9 @@ class MockPlanner:
         if ctx.last_action == "estimate_cost":
             est = obs.data if obs else {}
             vid = est.get("variant_id") or (s.get("queue") or ["?"])[0]
+            if vid in (s.get("queue") or []):
+                s["queue"].remove(vid)
             if obs is None or obs.status == "error":
-                if s.get("queue"):
-                    s["queue"].pop(0)
                 s.setdefault("rejected", []).append(
                     {"variant": vid, "reason": "估算失败", "cost": None})
                 return self._next_estimate(ctx, "估算失败，")
@@ -122,8 +125,6 @@ class MockPlanner:
             minutes = int(est["estimated_minutes"])
             s["last_estimate"] = est
             if total <= budget and minutes <= avail:
-                if s.get("queue") and s["queue"][0] == vid:
-                    s["queue"].pop(0)
                 s["chosen"] = vid
                 s["estimate"] = est
                 if s.get("material_ids") and s.get("materials"):
@@ -135,13 +136,15 @@ class MockPlanner:
                 return Action("search_materials",
                               {"queries": self._queries(t), "limit": est["material_items"]},
                               f"{est['label']} {total} ≤ 预算 {budget}、约 {minutes} 分钟可交付，选它并检索素材")
-            # 不满足：记录原因，换下一个
+            # 不满足：记录原因，换下一个；若被否的正是之前选定的档位（重算后超限），
+            # 必须把 chosen/estimate 一起清掉，否则未完成结果里会残留一个超预算的"方案"。
             why = (f"费用 {total} 超预算 {budget}" if total > budget
                    else f"耗时 {minutes} 分钟超过可用 {avail} 分钟")
-            if s.get("queue") and s["queue"][0] == vid:
-                s["queue"].pop(0)
             s.setdefault("rejected", []).append(
                 {"variant": vid, "reason": why, "cost": total, "minutes": minutes})
+            if s.get("chosen") == vid:
+                for key in ("chosen", "estimate", "materials", "material_ids", "script"):
+                    s[key] = None
             return self._next_estimate(ctx, f"{est['label']}被否（{why}），")
 
         if ctx.last_action == "search_materials":
@@ -292,7 +295,9 @@ SYSTEM_PROMPT = """你是内容活动方案的执行 Agent，为运营人员在�
 2. 估算超预算或超可用时间时，换下一个更简单的方案，而不是直接放弃。
 3. 工具报错时不要假装成功：可以重试一次或降级方案；实在做不了就 finish 并说明缺口。
 4. 方案保存前必须已生成脚本；save_plan 会重新核算费用，数字对不上会被拒绝。
-5. 不要重复保存已保存的方案。"""
+5. 不要重复保存已保存的方案。
+6. state 里的 rejected 是已经确认不可行的候选，不要换着参数反复重估同一档；
+   same_tool_failures 表示同一工具连续失败次数，达到 2 次应换方案或收尾。"""
 
 
 class LLMPlanner:
@@ -323,8 +328,10 @@ class LLMPlanner:
             "task": ctx.task.to_dict(),
             "available_minutes": ctx.task.available_minutes,
             "step": ctx.step,
-            "rejected": ctx.scratch.get("rejected", []),
-            "chosen_variant": ctx.scratch.get("chosen"),
+            # 这两项由 Agent 汇总，包含"费用/工时越界"和"工具连续失败"两类被否原因
+            "rejected": ctx.rejected,
+            "chosen_variant": ctx.chosen_variant or ctx.scratch.get("chosen"),
+            "same_tool_failures": ctx.same_tool_failures,
             "materials": [m["id"] for m in (ctx.scratch.get("materials") or [])],
             "script_ready": bool(ctx.scratch.get("script")),
             "saved": ctx.scratch.get("saved"),
@@ -396,7 +403,8 @@ class LLMPlanner:
         args = obj.get("args") or {}
         if not isinstance(args, dict):
             raise PlannerError("args 必须是对象")
-        return Action(action, args, str(obj.get("decision_basis", ""))[:200])
+        basis = str(obj.get("decision_basis", "")).strip() or "模型未给出决策依据"
+        return Action(action, args, basis[:200])
 
 
 def build_planner(kind: str):

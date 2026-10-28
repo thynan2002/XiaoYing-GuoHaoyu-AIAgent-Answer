@@ -442,9 +442,9 @@
         "summary": "方案已保存 plan_15ed4383c1（10.2 模拟单位）",
         "data": {
           "plan_id": "plan_15ed4383c1",
-          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_15ed4383c1.json",
+          "path": "data/saved_plans/plan_15ed4383c1.json",
           "deduped": false,
-          "saved_at": "2026-10-28 16:05:13"
+          "saved_at": "2026-10-28 16:25:32"
         },
         "error": null,
         "tool": "save_plan"

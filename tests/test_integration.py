@@ -52,6 +52,9 @@ class TestLLMHttpPath:
         assert r["planner"] == "llm"
         # 模型走了真 HTTP，参数由它自己给：8.0 是在 12.0 被否之后选的
         assert r["plan"]["cost_total"] == 8.0
+        # 被否方案由 Agent 按真实返回值记账，LLM 路径也不能丢
+        assert [x["variant"] for x in r["rejected"]] == ["full"]
+        assert "12.0" in r["rejected"][0]["reason"]
         trace = load(tmp_path / "llm" / "trace.json")
         assert [s["action"] for s in trace["steps"]][:3] == [
             "list_plan_variants", "estimate_cost", "estimate_cost"]

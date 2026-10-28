@@ -66,6 +66,9 @@ def _available_minutes(deadline: str, now: str | None) -> float | None:
 def _print_run(result: dict, trace_path: Path | None = None) -> None:
     print("=" * 78)
     print(f"run_id : {result['run_id']}     planner: {result['planner']}")
+    if str(result["planner"]).startswith("mock"):
+        print("提示   : 离线策略规划器（Mock）只验证流程与约束，不代表真实模型决策；"
+              "真实模型见 --planner llm")
     t = result["task"]
     print(f"需求   : {t.get('topic')}｜预算 {t.get('budget')}｜截止 {t.get('deadline')}"
           f"｜可用 {t.get('available_minutes')} 分钟")
@@ -135,8 +138,8 @@ def main(argv: list[str] | None = None) -> int:
         sp.add_argument("--fail-mode", choices=["error", "timeout", "partial"], default="error")
         sp.add_argument("--out", required=True, help="输出目录（result.json / trace.json / state.json）")
         sp.add_argument("--run-id", default="")
-        sp.add_argument("--plan-dir", default=str(config.DEFAULT_PLAN_DIR),
-                        help="方案落盘目录（幂等去重按此目录判重）")
+        sp.add_argument("--plan-dir", default="data/saved_plans",
+                        help="方案落盘目录（默认相对仓库根目录，便于跨机器复现）")
         sp.add_argument("--now", default="", help="把'现在'固定为指定时间，便于复现（YYYY-MM-DD HH:MM）")
         sp.add_argument("--json", action="store_true", help="额外把 result.json 打印到 stdout")
         sp.add_argument("--quiet", action="store_true")
@@ -154,21 +157,26 @@ def main(argv: list[str] | None = None) -> int:
 
     args = p.parse_args(argv)
 
-    if args.cmd == "run":
-        task = _read_task(args)
-        state = None
-    else:
-        state = json.loads(Path(args.state).read_text(encoding="utf-8"))
-        data = dict(state["task"])
-        for item in args.set:
-            if "=" not in item:
-                raise SystemExit(f"--set 需要 key=value，收到 {item!r}")
-            k, v = item.split("=", 1)
-            data[k.strip()] = v.strip()
-        task = _make_task(data, args.now)
-        # 续跑时清掉上一次的终态，保留 scratch / 已成功产物
-        state["status"] = None
-        state["status_reason"] = ""
+    try:
+        if args.cmd == "run":
+            task = _read_task(args)
+            state = None
+        else:
+            state = json.loads(Path(args.state).read_text(encoding="utf-8"))
+            data = dict(state["task"])
+            for item in args.set:
+                if "=" not in item:
+                    print(f"[退出] --set 需要 key=value，收到 {item!r}", file=sys.stderr)
+                    return 2
+                k, v = item.split("=", 1)
+                data[k.strip()] = v.strip()
+            task = _make_task(data, args.now)
+            # 续跑时清掉上一次的终态，保留 scratch / 已成功产物
+            state["status"] = None
+            state["status_reason"] = ""
+    except (OSError, json.JSONDecodeError, KeyError, ValueError) as e:
+        print(f"[退出] 读取任务输入或检查点失败：{e}", file=sys.stderr)
+        return 2
 
     inject = {name: {"times": args.fail_times, "mode": args.fail_mode} for name in args.fail_tool}
     registry = ToolRegistry(plan_dir=Path(args.plan_dir), inject=inject)

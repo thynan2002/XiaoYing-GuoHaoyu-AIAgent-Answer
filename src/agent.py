@@ -1,9 +1,15 @@
 """Agent 主循环：决策 → 执行工具 → 观察 → 再决策，直到完成 / 缺口 / 上限。
 
-工程侧的三道闸门（模型绕不过去）：
+工程侧的四道闸门（模型绕不过去）：
 1. 步数与工具调用次数硬上限，到顶就返回 INCOMPLETE_LIMIT；
-2. 收尾校验：声称 COMPLETED 但没有落盘方案、或费用超预算，一律降级为未完成；
-3. 每步落检查点（state.json），中断后可从断点续跑，已成功的步骤不重跑。
+2. 收尾校验：声称 COMPLETED 但没有落盘方案、没有脚本、没有有效报价，
+   或费用/工时超限，一律降级为未完成；
+3. 状态白名单：模型给出未知状态直接判 INCOMPLETE_PLANNER；
+4. 每步落检查点（state.json），中断后可从断点续跑，已成功的步骤不重跑。
+
+另外，Agent 自己维护 `progress`（每类工具最近一次成功返回）与 `rejected_auto`
+（从真实工具返回值推出的被否候选）两个台账。它们不依赖规划器实现，所以 MockPlanner
+与 LLMPlanner 的交付口径一致：换模型不会把"被否方案"和"已完成工序"弄丢。
 """
 
 from __future__ import annotations
@@ -50,7 +56,8 @@ class Agent:
             "task": task.to_dict(),
             "step": 0,
             "tool_calls": 0,
-            "scratch": {},          # 规划器工作区（含 rejected / chosen / materials ...）
+            "scratch": {},          # 规划器工作区（含 queue / chosen / materials ...）
+            "rejected_auto": [],    # Agent 从工具返回值推出的被否候选，跨规划器通用
             "status": None,
             "status_reason": "",
             "steps": [],
@@ -62,6 +69,83 @@ class Agent:
         tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
         tmp.replace(path)
 
+    # ------------------------------------------------------------ 台账
+    @staticmethod
+    def _merged_rejected(state: dict) -> list[dict]:
+        """合并两本账：规划器自己记的（含工具失败原因）+ Agent 自动记的（含费用/工时数字）。
+
+        规划器记的优先：同一档位它知道更具体的原因（如"脚本连续失败"），
+        Agent 不再用"费用超预算"覆盖。
+        """
+        sc = state.get("scratch") or {}
+        manual = [dict(r) for r in (sc.get("rejected") or []) if r.get("variant")]
+        seen = {r["variant"] for r in manual}
+        auto = [dict(r) for r in (state.get("rejected_auto") or [])
+                if r.get("variant") and r["variant"] not in seen]
+        return manual + auto
+
+    @staticmethod
+    def _budget_avail(task) -> tuple[float | None, float | None]:
+        if isinstance(task, dict):
+            return task.get("budget"), task.get("available_minutes")
+        return task.budget, task.available_minutes
+
+    @classmethod
+    def _estimate_feasible(cls, est: dict, task) -> bool:
+        if not est or not est.get("variant_id"):
+            return False
+        budget, avail = cls._budget_avail(task)
+        total = float(est.get("total", 0))
+        minutes = int(est.get("estimated_minutes", 0))
+        return ((budget is None or total <= float(budget) + 1e-9)
+                and (avail is None or minutes <= float(avail)))
+
+    @staticmethod
+    def _record_estimate_rejection(state: dict, est: dict, task) -> None:
+        """估算结果一出来就按预算/工时判一次，不依赖模型自己记账。"""
+        if not est or not est.get("variant_id"):
+            return
+        total = float(est.get("total", 0))
+        minutes = int(est.get("estimated_minutes", 0))
+        budget, avail = Agent._budget_avail(task)
+        why: list[str] = []
+        if budget is not None and total > float(budget) + 1e-9:
+            why.append(f"费用 {total} 超预算 {budget}")
+        if avail is not None and minutes > float(avail):
+            why.append(f"耗时 {minutes} 分钟超过可用 {avail} 分钟")
+        if not why:
+            return
+        entry = {"variant": est["variant_id"], "reason": "；".join(why),
+                 "cost": total, "minutes": minutes}
+        auto = state.setdefault("rejected_auto", [])
+        if not any(e.get("variant") == entry["variant"] and e.get("reason") == entry["reason"]
+                   for e in auto):
+            auto.append(entry)
+        # 如果被否的正是当前"已选定"的档位（例如素材变少后重算反而超限），
+        # 取消选定，避免交付结果里残留一个不可行的 plan。
+        if state.get("chosen_variant") == entry["variant"]:
+            state["chosen_variant"] = None
+
+    @staticmethod
+    def _record_tool_failure(state: dict, action_name: str, same_fail: int) -> None:
+        """同一工具连续失败 2 次时，把当前档位记为被否——换成 LLM 规划器也有同样留痕。"""
+        if same_fail < 2:
+            return
+        variant = state.get("chosen_variant")
+        if not variant:
+            return
+        progress = (state.get("scratch") or {}).get("progress") or {}
+        est = progress.get("estimate_cost") or {}
+        entry = {
+            "variant": variant,
+            "reason": f"{action_name} 连续失败 {same_fail} 次，放弃该方案",
+            "cost": est.get("total") if est.get("variant_id") == variant else None,
+        }
+        auto = state.setdefault("rejected_auto", [])
+        if not any(e.get("variant") == entry["variant"] and e.get("reason") == entry["reason"]
+                   for e in auto):
+            auto.append(entry)
+
     # ------------------------------------------------------------ 主循环
     def run(self, task: Task, resume_state: dict | None = None) -> dict[str, Any]:
         state = resume_state or self._new_state(task)
@@ -70,6 +154,7 @@ class Agent:
             state["task"] = task.to_dict()
             state["run_id"] = self.run_id
             state["planner"] = self.planner.name
+            state.setdefault("rejected_auto", [])
             # 人工介入 = 新的重试窗口：把"同一工具连续失败"计数清零，
             # 否则续跑会立刻再次进入"降级/收尾"，等于没续跑。
             scratch = state.setdefault("scratch", {})
@@ -95,7 +180,9 @@ class Agent:
 
             ctx = DecisionContext(task=task, scratch=state["scratch"],
                                   last_action=last_action, last_obs=last_obs,
-                                  step=state["step"] + 1, same_tool_failures=same_fail)
+                                  step=state["step"] + 1, same_tool_failures=same_fail,
+                                  chosen_variant=state.get("chosen_variant"),
+                                  rejected=self._merged_rejected(state))
             t0 = time.time()
             try:
                 action = self.planner.decide(ctx)
@@ -152,17 +239,30 @@ class Agent:
             record["observation"] = obs.to_dict()
             state["last_observation"] = obs.to_dict()
             state["last_action"] = action.action
+
             # 与规划器无关的"已完成工序"台账：谁做规划都能读到，也便于续跑与出报告
             if obs.status in ("ok", "partial"):
                 state.setdefault("scratch", {}).setdefault("progress", {})[action.action] = obs.data
-            # 模型"选定"的方案：从它的工具参数里记，而不是从费用的返回里推
+
+            # 模型"选定"的方案：优先从工具参数里记；search_materials 的契约里没有
+            # variant_id，就从上一次"预算/工时都可行"的估算结果推，否则 LLM 路径
+            # 在脚本失败时不知道自己在做哪一档。
+            # 只有工具成功/部分成功才算选定；失败调用不能把 chosen 改到别的档位上。
             vid = (action.args or {}).get("variant_id")
-            if vid and action.action in ("search_materials", "generate_script", "save_plan"):
+            if action.action == "search_materials":
+                last_est = (state["scratch"].get("progress") or {}).get("estimate_cost") or {}
+                if self._estimate_feasible(last_est, task):
+                    vid = vid or last_est.get("variant_id")
+            if (vid and obs.status in ("ok", "partial")
+                    and action.action in ("search_materials", "generate_script", "save_plan")):
                 state["chosen_variant"] = vid
-            # 模型"选定"的方案：从它的工具参数里记，而不是从费用的返回里推
-            vid = (action.args or {}).get("variant_id")
-            if vid and action.action in ("search_materials", "generate_script", "save_plan"):
-                state["chosen_variant"] = vid
+
+            # 费用/工时越界由 Agent 自己记账；工具连续失败也留一条否决原因
+            if action.action == "estimate_cost" and obs.status == "ok":
+                self._record_estimate_rejection(state, obs.data or {}, task)
+            if obs.status == "error":
+                self._record_tool_failure(state, action.action, same_fail)
+
             record["elapsed_ms"] = int((time.time() - t0) * 1000)
             state["steps"].append(record)
             self._checkpoint(state)
@@ -188,13 +288,15 @@ class Agent:
         chosen = state.get("chosen_variant") or sc.get("chosen")
         est_all = prog.get("estimate_cost") or {}
         estimate = sc.get("estimate") or (est_all if est_all.get("variant_id") == chosen else {})
+        # 被否清单里去掉最终选中的那一档（它后来可能重新核算并可行）
+        rejected = [r for r in Agent._merged_rejected(state) if r.get("variant") != chosen]
         return {
             "estimate": estimate,
             "saved": sc.get("saved") or (prog.get("save_plan") or {}),
             "script": script,
             "materials": materials,
             "material_ids": material_ids,
-            "rejected": sc.get("rejected") or [],
+            "rejected": rejected,
         }
 
     @classmethod
@@ -221,17 +323,23 @@ class Agent:
         task = state["task"]
         a = self._artifacts(state)
 
-        # 闸门 3：声称完成必须真的完成
+        # 闸门 3：声称完成必须真的完成，而且费用/工时都落在约束内
         if status == "COMPLETED":
             est = a["estimate"]
-            problems = []
+            problems: list[str] = []
             if not a["saved"].get("plan_id"):
                 problems.append("没有落盘方案")
             if not a["script"]:
                 problems.append("没有脚本")
+            if not est:
+                problems.append("没有有效的费用估算")
             budget = task.get("budget")
             if budget is not None and est and float(est.get("total", 0)) > float(budget) + 1e-9:
                 problems.append(f"费用 {est.get('total')} 超预算 {budget}")
+            avail = task.get("available_minutes")
+            if (avail is not None and est
+                    and int(est.get("estimated_minutes", 0)) > float(avail)):
+                problems.append(f"工时 {est.get('estimated_minutes')} 分钟超过可用 {avail} 分钟")
             if problems:
                 status = "INCOMPLETE_INCONSISTENT"
                 reason = "模型声称完成但校验不通过：" + "；".join(problems)

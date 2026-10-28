@@ -39,6 +39,8 @@ def compute_cost(variant_id: str, item_count: int | None = None) -> dict[str, An
 
     spec = variants[variant_id]
     items = spec["material_items"] if item_count is None else int(item_count)
+    if items < 0:
+        raise ToolError(f"素材条数不能为负：{items}")
     ceil30 = math.ceil(spec["duration_s"] / 30)
 
     breakdown: list[dict[str, Any]] = []
@@ -226,8 +228,12 @@ class ToolRegistry:
             return Observation(status, summary, data=data, tool=name)
         except ToolError as e:
             return Observation("error", f"{name} 失败：{e}", error=str(e), tool=name)
-        except TypeError as e:
-            return Observation("error", f"{name} 参数不合法：{e}", error=f"BAD_ARGS: {e}", tool=name)
+        except (TypeError, ValueError) as e:
+            return Observation("error", f"{name} 参数不合法：{e}",
+                               error=f"BAD_ARGS: {e}", tool=name)
+        except Exception as e:  # noqa: BLE001 - 工具崩溃必须变成观察，不能中断 Agent
+            return Observation("error", f"{name} 内部异常：{type(e).__name__}: {e}",
+                               error=f"INTERNAL: {type(e).__name__}: {e}", tool=name)
 
     @staticmethod
     def _degrade(name: str, data: dict):
@@ -258,6 +264,10 @@ class ToolRegistry:
 
     def _tool_search_materials(self, queries: list[str] | None = None,
                                limit: int = 4):
+        if isinstance(queries, str):
+            queries = [queries]
+        if not isinstance(queries, (list, tuple)):
+            raise ToolError("queries 必须是字符串数组")
         queries = [q for q in (queries or []) if str(q).strip()]
         if not queries:
             raise ToolError("queries 不能为空")
@@ -306,6 +316,8 @@ class ToolRegistry:
     def _tool_estimate_cost(self, variant_id: str = "", material_ids: list[str] | None = None):
         if not variant_id:
             raise ToolError("缺少 variant_id")
+        if material_ids is not None and not isinstance(material_ids, (list, tuple)):
+            raise ToolError("material_ids 必须是字符串数组")
         item_count = len(material_ids) if material_ids else None
         est = compute_cost(variant_id, item_count)
         return (est, f"{est['label']}估算 {est['total']} {est['currency']}，"
@@ -317,11 +329,16 @@ class ToolRegistry:
             raise ToolError("缺少 variant_id")
         if not material_ids:
             raise ToolError("material_ids 不能为空：先检索素材")
+        if not isinstance(material_ids, (list, tuple)):
+            raise ToolError("material_ids 必须是字符串数组")
         pool = {m["id"]: m for m in config.load_materials()["materials"]}
         picked = [pool[i] for i in material_ids if i in pool]
         if not picked:
             raise ToolError("material_ids 全部无效")
-        spec = config.load_costs()["variants"][variant_id]
+        variants = config.load_costs()["variants"]
+        if variant_id not in variants:
+            raise ToolError(f"未知方案 {variant_id}，可选：{', '.join(variants)}")
+        spec = variants[variant_id]
         need = spec["material_items"]
         if len(picked) < need:
             # 素材不足时允许写短脚本，但必须显式返回 partial
@@ -337,11 +354,17 @@ class ToolRegistry:
                         cost_total: float | None = None, script: dict | None = None):
         if not topic or not variant_id or not material_ids:
             raise ToolError("保存方案缺少必填字段（topic / variant_id / material_ids）")
+        if not isinstance(material_ids, (list, tuple)):
+            raise ToolError("material_ids 必须是字符串数组")
         if script is None:
             raise ToolError("保存方案缺少 script")
+        if not isinstance(script, dict):
+            raise ToolError("script 必须是对象")
         if cost_total is None:
             raise ToolError("保存方案缺少 cost_total")
 
+        # 去重后再核算：重复的素材 id 不能把授权费算两遍
+        material_ids = list(dict.fromkeys(material_ids))
         # 重新核算：拒绝把算错的费用写进方案
         recomputed = compute_cost(variant_id, len(material_ids))
         if abs(float(cost_total) - recomputed["total"]) > 0.01:
@@ -357,7 +380,7 @@ class ToolRegistry:
         path = self.plan_dir / f"{plan_id}.json"
 
         if path.exists():
-            return ({"plan_id": plan_id, "path": str(path), "deduped": True,
+            return ({"plan_id": plan_id, "path": path.as_posix(), "deduped": True,
                      "saved_at": time.strftime("%Y-%m-%d %H:%M:%S")},
                     f"方案 {plan_id} 已存在，命中幂等保存，未重复写入", "ok")
 
@@ -375,6 +398,6 @@ class ToolRegistry:
             "saved_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         }
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-        return ({"plan_id": plan_id, "path": str(path), "deduped": False,
+        return ({"plan_id": plan_id, "path": path.as_posix(), "deduped": False,
                  "saved_at": payload["saved_at"]},
                 f"方案已保存 {plan_id}（{recomputed['total']} {recomputed['currency']}）", "ok")

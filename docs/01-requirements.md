@@ -45,12 +45,14 @@
 | S2 | 预算 10、完整版 12 时，能自己改选 8 的方案并交付 | `case-01` 的 step2→step3 |
 | S3 | 没有可行方案时返回未完成与缺口，不落盘 | `case-06`（缺口 1.0） |
 | S4 | 缺预算时停下要信息，不编数字 | `case-02` |
-| S5 | 工具连续失败时改计划，且保留已成功的素材与估算 | `case-04`（11 步完成） |
+| S5 | 工具连续失败时改计划，且保留已成功的素材与估算 | `case-04`（Mock，11 步）、`case-13`（LLM，10 步） |
 | S6 | 重复执行不产生重复方案 | `case-07`（`deduped: true`） |
 | S7 | 达到步数上限返回 `INCOMPLETE_LIMIT` 并说明保留了什么 | `case-08`（3/3） |
 | S8 | 失败步骤在记录里必须是失败，不能算成功 | `tests/test_agent_loop.py::TestToolFailure` |
 | S9 | 交付结果含任务计划、步骤状态、费用合计、方案或未完成原因 | `result.json` 的 `plan.outline` / `steps_brief` |
 | S10 | 失败步骤可从检查点续跑，且不重跑已成功步骤（加分项） | `case-11` → `case-12` |
+| S11 | 评审不必读源码就能核对交付物 | `python scripts/verify_submission.py` 全部通过 |
+| S12 | 命令可跨日期复现 | README 命令统一带 `--now "2026-10-28 15:00"` |
 
 ## 4. 验收点映射（题目"必须验收" → 证据）
 
@@ -58,13 +60,15 @@
 | --- | --- | --- |
 | 正常完成 | 12 超预算 → 8 交付 | `examples/case-01-normal/` |
 | 缺预算或截止时间 | `NEED_INPUT` + 续跑 | `examples/case-02-missing-input/`、`case-03-resume-after-input/` |
-| 工具失败 | 脚本服务连续 503 | `examples/case-04-tool-failure-degrade/` |
+| 工具失败 | 脚本服务连续 503 | `examples/case-04-tool-failure-degrade/`、`case-13-llm-tool-failure/`（LLM 路径） |
 | 预算超限 | 全档位被否 + 缺口 | `examples/case-06-budget-exceeded/` |
 | 重复执行 | 幂等保存命中 | `examples/case-07-repeated-save/` |
 | 步数上限 | 3 步强行截断 | `examples/case-08-step-limit/` |
 | 加分：失败步骤续跑 | 落盘失败 → 续跑只补这一步 | `case-11` → `case-12`（第 9 步直接 save_plan） |
 | 加分：缺信息续跑 | `resume --set budget=10` | `case-02` → `case-03` |
 | 加分：部分成功保留 | 素材 1/4 时重算并交付 | `examples/case-05-partial-materials/` |
+| LLM 代码路径（模型可替换） | 真 HTTP + JSON 解析 + 同一循环 | `examples/case-10-llm-endpoint/`、`case-13-llm-tool-failure/` |
+| 交付物自检 | 目录 / 字段 / trace / 必验场景 | `scripts/verify_submission.py` |
 
 ## 5. 输入与数据
 

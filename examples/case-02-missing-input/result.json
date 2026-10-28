@@ -29,7 +29,7 @@
     "max_steps": 12,
     "tool_calls": 0,
     "max_tool_calls": 12,
-    "elapsed_ms": 1
+    "elapsed_ms": 0
   },
   "steps_brief": [
     {

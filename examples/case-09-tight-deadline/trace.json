@@ -410,14 +410,14 @@
         "summary": "方案已保存 plan_c096a91dc3（8.0 模拟单位）",
         "data": {
           "plan_id": "plan_c096a91dc3",
-          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_c096a91dc3.json",
+          "path": "data/saved_plans/plan_c096a91dc3.json",
           "deduped": false,
-          "saved_at": "2026-10-28 16:05:15"
+          "saved_at": "2026-10-28 16:25:33"
         },
         "error": null,
         "tool": "save_plan"
       },
-      "elapsed_ms": 1,
+      "elapsed_ms": 0,
       "follow_up": "finish"
     },
     {

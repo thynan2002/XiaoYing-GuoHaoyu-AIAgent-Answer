@@ -2,9 +2,10 @@
 
 所有数字都来自仓库内可直接重跑的文件：`examples/case-*/result.json`、
 `examples/case-*/trace.json`、`examples/tests-output.txt`。
-重跑方式：`python scripts/gen_examples.py && python -m pytest tests -q`。
+重跑方式：`python scripts/gen_examples.py && python -m pytest tests -q`；
+提交前再用 `python scripts/verify_submission.py` 做一次不联网的交付物自检。
 
-## 1. 十二个用例：预期 vs 实际
+## 1. 十三个用例：预期 vs 实际
 
 | # | 用例 | 输入要点 | 注入 | 预期 | 实际 | 关键数字 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -20,6 +21,7 @@
 | 10 | [case-10-llm-endpoint](../examples/case-10-llm-endpoint/) | 预算 10 | 无（接本地兼容端点） | 走真 HTTP 的模型路径也能完成 | `COMPLETED` | `planner: llm`，7 步，12.0 → 8.0 |
 | 11 | [case-11-save-failure](../examples/case-11-save-failure/) | 预算 10 | `save_plan` 持续 503 | 报未完成，但保住素材/脚本/费用 | `INCOMPLETE_SAVE` | 8 步；`saved_plan` 为 `null`；素材 2 条 + 脚本仍在 |
 | 12 | [case-12-resume-after-save-failure](../examples/case-12-resume-after-save-failure/) | 承接 11 的检查点 | 无（工具恢复） | 只补失败那步 | `COMPLETED` | 第 9 步直接 `save_plan`；检索/脚本全链路各只 1 次 |
+| 13 | [case-13-llm-tool-failure](../examples/case-13-llm-tool-failure/) | 预算 14 | `generate_script` 连续 2 次 503 | 同一 LLM 路径重试 → 降级 → 仍交付 | `COMPLETED` | full 12.0 → 素材 2/4 重算 10.8 → 失败 ×2 → lite 8.0；10 步；`planner: llm` |
 
 每个目录都包含：`input.json`（输入）、`command.txt`（实际命令）、`stdout.txt`（人看的输出）、
 `result.json`（机读结果）、`trace.json`（逐步记录）、`state.json`（检查点）、
@@ -37,7 +39,8 @@
 | 步数上限 | 08 | `TestLimit`（步数 + 工具调用两种上限） |
 | 部分成功保留 | 05 | 04 的素材与估算在降级后仍被复用 |
 | ReAct 循环 | 01, 04, 05, 09, 10 | 每步都有 `decision_basis` + `observation` + `follow_up` |
-| 真实模型代码路径 | 10 | `TestLLMHttpPath`（真 HTTP，不打桩） |
+| 真实模型代码路径 | 10, 13 | `TestLLMHttpPath`（真 HTTP，不打桩） |
+| LLM 路径的工具失败调整 | 13 | 重试 2 次 → 降级 lite；`rejected` 含 full |
 | 失败步骤续跑（加分） | 11 → 12 | `TestResumeFromFailure`（断言续跑不重跑检索/脚本） |
 | 失败不记成功 | 04, 11 | `test_failure_never_marked_success` |
 | 假完成拦截 | — | `TestFinishGuard`（假规划器声称完成被改判） |
@@ -45,14 +48,14 @@
 
 ## 3. 测试结果
 
-`python -m pytest tests -q` → **49 passed in 3.3s**（完整输出见 `examples/tests-output.txt`）。
+`python -m pytest tests -q` → **56 passed in 2.3s**（完整输出见 `examples/tests-output.txt`）。
 
 | 测试文件 | 关注点 | 用例数 |
 | --- | --- | --- |
-| `tests/test_tools_cost.py` | 费用公式可独立复算（12/8/5、明细求和、按条数递减）、任务计划自洽、检索边界（整句主题 / 噪声查询）、保存前二次核算、幂等 | 18 |
-| `tests/test_agent_loop.py` | 正常链路、缺输入、续跑、工具失败与降级、预算缺口、重复执行、双上限、假完成拦截 | 16 |
-| `tests/test_planner.py` | 模型输出解析（裸 JSON / 代码块 / 夹带散文 / 未知动作 / 非 JSON / args 类型）、mock 策略分支 | 10 |
-| `tests/test_integration.py` | 真 HTTP 的模型路径、端不可达时的收场、失败步骤续跑、交付字段完整性 | 5 |
+| `tests/test_tools_cost.py` | 费用公式可独立复算（12/8/5、明细求和、按条数递减）、任务计划自洽、检索边界（整句主题 / 噪声查询）、保存前二次核算、幂等、错误参数不崩 | 20 |
+| `tests/test_agent_loop.py` | 正常链路、缺主题/预算/截止时间、续跑、工具失败与降级、部分成功重算、预算缺口、重复执行、双上限、假完成/超预算/超工时拦截 | 20 |
+| `tests/test_planner.py` | 模型输出解析（裸 JSON / 代码块 / 夹带散文 / 未知动作 / 非 JSON / args 类型 / 缺依据兜底）、mock 策略分支 | 11 |
+| `tests/test_integration.py` | 真 HTTP 的模型路径、LLM 路径被否记录、端不可达时的收场、失败步骤续跑、交付字段完整性 | 5 |
 
 费用测试不只断言 `total == 12.0`，而是用单价表手算一遍再比对（`test_manual_recompute_matches`），
 这样公式实现漂移会立刻被抓住，而不是"改公式改测试一起改"。
@@ -95,6 +98,21 @@
    走了"0 命中 → 换词 → 仍未命中 → 未完成"。修复：主题改成"城市展会现场快剪"，
    同时给检索加"长 query 用字符二元组打分"，让整句主题也能命中。
 
+### 4.5 提交前自查发现并修掉的问题
+
+1. **重复代码**：`src/agent.py` 的 `chosen_variant` 赋值重复；`tests/test_tools_cost.py`
+   末尾整段重复了两个测试类。因为 Python 后定义的类会覆盖前一个，`pytest` 实际只收集后一份，
+   前一份是**看起来测了、其实从未执行**的死代码。已删除；新增 7 个针对性用例后，测试数
+   从 49 变为 56，且每个收集到的用例都真实存在。
+2. **重复文档与占位符**：`docs/05` 的 6.1 节重复，`docs/04` 留着"待本人确认"占位符。已重写，
+   并让 `verify_submission.py` 把占位符当成失败项。
+3. **命令不可长期复现**：README 的命令没带 `--now`，输入截止时间是 2026-11-02；过了这天
+   "可用分钟"归零，正常用例会失败。所有命令已固定 `--now`，落盘路径改为相对路径。
+4. **换规划器丢状态**：LLM 路径的 `result.rejected` 原本为空。改为 Agent 按真实工具返回值
+   自动记账，`case-10` 现在能看到 full 12.0 超预算 10.0；`same_tool_failures` 也传给了模型。
+5. **工具参数防御**：模型给未知档位时 `generate_script` 原先会抛 `KeyError` 打崩循环；
+   现在返回 error 观察。重复的 `material_ids` 也不再重复计费。
+
 ## 5. 结果解读
 
 ### 5.1 能证明什么
@@ -102,20 +120,30 @@
 - 预算/工时判断发生**在工具返回值之后**：`case-01` 第 3 步依据写着 `12.0 超预算 10.0`，
   `case-10`（LLM 规划器）第 3 步依据写着 `完整版 被否（费用 12.0 超预算 10.0），换 lite 再算`——
   都是运行时读到的数字，不是预设文案。
+- **被否方案有独立台账**：`case-01` / `case-10` 的 `rejected` 都含
+  `{"variant":"full","reason":"费用 12.0 超预算 10.0"}`；`case-04` 还记了
+  "脚本工具连续失败 2 次，放弃该方案"。这份台账由 Agent 从工具返回值生成，不依赖 mock。
 - 失败后**计划真的变了**：`case-04` 从 full（10.8）退到 lite（8.0），第 5、6 步如实记 error，
   第 7 步依据写明"脚本连续失败 2 次，放弃完整版"。
-- 未完成时**不落盘**：`case-06` / `case-08` / `case-11` 的 `saved_plan` 均为 `null`。
+- 部分成功**不会丢结果**：`case-05` 只回 1/4 条素材，第 4 步先按 1 条重算 10.2，再写脚本、保存。
+- 未完成时**不落盘**：`case-06` / `case-08` / `case-11` 的 `saved_plan` 均为 `null`；
+  `case-11` 仍保留素材、脚本与 8.0 的估算。
 - 重复执行**不改数据**：`case-07` 只命中已有方案，目录仍 1 个文件。
-- **失败步骤续跑**第 9 步就补完，检索与脚本没有重跑（`case-12`）。
+- **失败步骤续跑**：`case-12` 第 9 步直接 `save_plan`，检索与脚本在整条 trace 里各只 1 次。
 - **模型那条代码路径真的在跑**：`case-10` 走的是 `urllib → HTTP → choices[0].message.content
   → JSON 解析 → Action`，不是本地函数调用；`TestLLMHttpPath` 用随机端口起服务再断言。
+- **同一 LLM 路径也能处理工具失败**：`case-13` 的 `planner` 同样是 `llm`，素材 2/4 时先重算
+  10.8，脚本失败 2 次后从 full 降到 lite 8.0，素材与估算保留在 `artifacts`/`progress` 里。
+- **提交物自洽可查**：`python scripts/verify_submission.py` 不联网核对 13 个实施例、
+  必验场景、trace 字段与文档占位符，当前全部通过。
 
 ### 5.2 未验证项（明确边界）
 
 | 项 | 状态 | 影响 |
 | --- | --- | --- |
 | 真实大模型的决策质量 | **未验证**：`case-10` 的"模型"是 `scripts/fake_llm_server.py` 里的规则 | 能说"接口与循环接得上"，不能说"真实模型也会选 8 的方案" |
-| 真实模型对提示词的鲁棒性 | 未验证 | 真模型可能漏 `decision_basis`、可能反复调同一工具（会被上限拦住） |
+| 真实模型对提示词的鲁棒性 | 未验证 | 真模型可能漏 `decision_basis`（已做兜底）、可能反复调同一工具（会被上限拦住） |
+| LLM 路径的被否记录 | 已验证（代码路径） | 由 Agent 侧统一记账，不依赖模型自己写；`case-10` 有完整 `rejected` |
 | 并发 / 多用户 | 未实现 | 幂等靠本地文件名，多机共享目录时不保证 |
 | 脚本质量 | 模板拼装 | 只验证"有结构化产出"，不评估文案好坏 |
 

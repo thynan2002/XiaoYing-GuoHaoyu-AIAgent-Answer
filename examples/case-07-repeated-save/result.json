@@ -108,16 +108,16 @@
     "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入",
     "data": {
       "plan_id": "plan_aa0a4621d5",
-      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+      "path": "data/saved_plans/plan_aa0a4621d5.json",
       "deduped": true,
-      "saved_at": "2026-10-28 16:05:14"
+      "saved_at": "2026-10-28 16:25:32"
     },
     "error": null,
     "tool": "save_plan"
   },
   "saved_plan": {
     "plan_id": "plan_aa0a4621d5",
-    "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+    "path": "data/saved_plans/plan_aa0a4621d5.json",
     "deduped": true
   },
   "artifacts": {
@@ -166,7 +166,7 @@
     "max_steps": 12,
     "tool_calls": 6,
     "max_tool_calls": 12,
-    "elapsed_ms": 13
+    "elapsed_ms": 10
   },
   "steps_brief": [
     {

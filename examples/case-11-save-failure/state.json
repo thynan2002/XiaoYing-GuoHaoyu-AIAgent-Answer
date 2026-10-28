@@ -432,6 +432,19 @@
     "script_status": "ok",
     "save_fail": 2
   },
+  "rejected_auto": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    },
+    {
+      "variant": "lite",
+      "reason": "save_plan 连续失败 2 次，放弃该方案",
+      "cost": 8.0
+    }
+  ],
   "status": "INCOMPLETE_SAVE",
   "status_reason": "方案保存失败 2 次：save_plan 返回 503（注入故障）；脚本与费用已保留",
   "steps": [

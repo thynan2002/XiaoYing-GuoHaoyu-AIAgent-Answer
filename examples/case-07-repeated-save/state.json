@@ -191,9 +191,9 @@
       },
       "save_plan": {
         "plan_id": "plan_aa0a4621d5",
-        "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+        "path": "data/saved_plans/plan_aa0a4621d5.json",
         "deduped": true,
-        "saved_at": "2026-10-28 16:05:14"
+        "saved_at": "2026-10-28 16:25:32"
       }
     },
     "queue": [
@@ -438,11 +438,19 @@
     "script_status": "ok",
     "saved": {
       "plan_id": "plan_aa0a4621d5",
-      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+      "path": "data/saved_plans/plan_aa0a4621d5.json",
       "deduped": true,
-      "saved_at": "2026-10-28 16:05:14"
+      "saved_at": "2026-10-28 16:25:32"
     }
   },
+  "rejected_auto": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    }
+  ],
   "status": "COMPLETED",
   "status_reason": "方案已保存 plan_aa0a4621d5（幂等命中，未重复写入）",
   "steps": [
@@ -839,9 +847,9 @@
         "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入",
         "data": {
           "plan_id": "plan_aa0a4621d5",
-          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+          "path": "data/saved_plans/plan_aa0a4621d5.json",
           "deduped": true,
-          "saved_at": "2026-10-28 16:05:14"
+          "saved_at": "2026-10-28 16:25:32"
         },
         "error": null,
         "tool": "save_plan"
@@ -871,9 +879,9 @@
     "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入",
     "data": {
       "plan_id": "plan_aa0a4621d5",
-      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
+      "path": "data/saved_plans/plan_aa0a4621d5.json",
       "deduped": true,
-      "saved_at": "2026-10-28 16:05:14"
+      "saved_at": "2026-10-28 16:25:32"
     },
     "error": null,
     "tool": "save_plan"

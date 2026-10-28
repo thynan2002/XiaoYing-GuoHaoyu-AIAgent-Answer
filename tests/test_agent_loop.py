@@ -59,6 +59,12 @@ class TestMissingInput:
         assert r["status"] == "NEED_INPUT"
         assert "deadline" in r["status_reason"]
 
+    def test_missing_topic_also_asks(self, tmp_path, plan_dir):
+        r = run_agent(tmp_path, plan_dir, topic="")
+        assert r["status"] == "NEED_INPUT"
+        assert "topic" in r["status_reason"]
+        assert r["usage"]["tool_calls"] == 0
+
     def test_resume_after_filling_budget_completes(self, tmp_path, plan_dir):
         first = run_agent(tmp_path, plan_dir, budget=None, out="run1")
         assert first["status"] == "NEED_INPUT"
@@ -116,6 +122,22 @@ class TestToolFailure:
         assert r["status"].startswith("INCOMPLETE")
         assert r["saved_plan"] is None
         assert r["status_reason"]
+
+
+# ---------------------------------------------------------------- 部分成功
+
+class TestPartialSuccess:
+    def test_partial_search_reestimates_cost_before_saving(self, tmp_path, plan_dir):
+        # 素材只回 1/4 条：不能拿 4 条的报价交付，必须先按实际条数重算
+        r = run_agent(tmp_path, plan_dir, budget=12,
+                      inject={"search_materials": {"times": 1, "mode": "partial"}})
+        trace = load(tmp_path / "run" / "trace.json")
+        res = [s for s in trace["steps"] if s["action"] == "estimate_cost"][-1]
+        assert "重新核算" in res["decision_basis"]
+        assert r["status"] == "COMPLETED"
+        assert r["plan"]["variant_id"] == "full"
+        assert r["plan"]["cost_total"] == 10.2          # 12.0 - 3 条 × 0.6
+        assert len(r["plan"]["material_ids"]) == 1
 
 
 # ---------------------------------------------------------------- 预算超限
@@ -178,12 +200,48 @@ class _ClaimSuccessWithoutDoingAnything:
         return Action("finish", {"status": "COMPLETED", "reason": "我好了"}, "假装完成")
 
 
+class _ClaimSuccessWithArtifacts:
+    """假规划器：产物齐全但数字越界，用来验证收尾校验不只查"有没有"，还查"合不合规"。"""
+
+    name = "fake-artifacts"
+    is_mock = True
+
+    def __init__(self, variant_id: str, total: float, minutes: int):
+        self.variant_id = variant_id
+        self.total = total
+        self.minutes = minutes
+
+    def decide(self, ctx: DecisionContext) -> Action:
+        ctx.scratch["chosen"] = self.variant_id
+        ctx.scratch["estimate"] = {
+            "variant_id": self.variant_id, "label": "完整版", "total": self.total,
+            "currency": "模拟单位", "estimated_minutes": self.minutes,
+            "breakdown": [], "outline": [], "material_items": 4,
+        }
+        ctx.scratch["saved"] = {"plan_id": "plan_fake", "path": "", "deduped": False}
+        ctx.scratch["script"] = {"title": "假脚本"}
+        return Action("finish", {"status": "COMPLETED", "reason": "我好了"}, "假装完成")
+
+
 class TestFinishGuard:
     def test_claiming_done_without_artifacts_is_downgraded(self, tmp_path, plan_dir):
         r = run_agent(tmp_path, plan_dir, planner=_ClaimSuccessWithoutDoingAnything())
         assert r["status"] == "INCOMPLETE_INCONSISTENT"
         assert "校验不通过" in r["status_reason"]
         assert "没有落盘方案" in r["status_reason"]
+
+    def test_claiming_done_over_budget_is_downgraded(self, tmp_path, plan_dir):
+        r = run_agent(tmp_path, plan_dir, budget=10,
+                      planner=_ClaimSuccessWithArtifacts("full", 12.0, 7))
+        assert r["status"] == "INCOMPLETE_INCONSISTENT"
+        assert "超预算" in r["status_reason"]
+
+    def test_claiming_done_over_deadline_is_downgraded(self, tmp_path, plan_dir):
+        # 预算够但可用工时只有 10 分钟，12 分钟的完整版不能算完成
+        r = run_agent(tmp_path, plan_dir, budget=20, available_minutes=10,
+                      planner=_ClaimSuccessWithArtifacts("full", 12.0, 12))
+        assert r["status"] == "INCOMPLETE_INCONSISTENT"
+        assert "工时" in r["status_reason"]
 
     def test_illegal_status_is_rejected(self, tmp_path, plan_dir):
         class Bad:

@@ -20,6 +20,7 @@
       "budget"
     ]
   },
+  "rejected_auto": [],
   "status": "NEED_INPUT",
   "status_reason": "缺少必要信息：budget；补齐后可用 resume 从检查点续跑",
   "steps": [

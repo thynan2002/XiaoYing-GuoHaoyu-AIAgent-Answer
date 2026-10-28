@@ -157,7 +157,7 @@
     "max_steps": 12,
     "tool_calls": 7,
     "max_tool_calls": 12,
-    "elapsed_ms": 13
+    "elapsed_ms": 10
   },
   "steps_brief": [
     {

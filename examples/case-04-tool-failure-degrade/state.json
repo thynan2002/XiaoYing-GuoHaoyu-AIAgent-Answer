@@ -191,9 +191,9 @@
       },
       "save_plan": {
         "plan_id": "plan_786a532b33",
-        "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
+        "path": "data/saved_plans/plan_786a532b33.json",
         "deduped": false,
-        "saved_at": "2026-10-28 16:05:12"
+        "saved_at": "2026-10-28 16:25:32"
       }
     },
     "queue": [
@@ -440,11 +440,18 @@
     "script_status": "ok",
     "saved": {
       "plan_id": "plan_786a532b33",
-      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
+      "path": "data/saved_plans/plan_786a532b33.json",
       "deduped": false,
-      "saved_at": "2026-10-28 16:05:12"
+      "saved_at": "2026-10-28 16:25:32"
     }
   },
+  "rejected_auto": [
+    {
+      "variant": "full",
+      "reason": "generate_script 连续失败 2 次，放弃该方案",
+      "cost": 10.8
+    }
+  ],
   "status": "COMPLETED",
   "status_reason": "方案已保存 plan_786a532b33",
   "steps": [
@@ -1046,14 +1053,14 @@
         "summary": "方案已保存 plan_786a532b33（8.0 模拟单位）",
         "data": {
           "plan_id": "plan_786a532b33",
-          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
+          "path": "data/saved_plans/plan_786a532b33.json",
           "deduped": false,
-          "saved_at": "2026-10-28 16:05:12"
+          "saved_at": "2026-10-28 16:25:32"
         },
         "error": null,
         "tool": "save_plan"
       },
-      "elapsed_ms": 1,
+      "elapsed_ms": 0,
       "follow_up": "finish"
     },
     {
@@ -1078,9 +1085,9 @@
     "summary": "方案已保存 plan_786a532b33（8.0 模拟单位）",
     "data": {
       "plan_id": "plan_786a532b33",
-      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_786a532b33.json",
+      "path": "data/saved_plans/plan_786a532b33.json",
       "deduped": false,
-      "saved_at": "2026-10-28 16:05:12"
+      "saved_at": "2026-10-28 16:25:32"
     },
     "error": null,
     "tool": "save_plan"

@@ -95,23 +95,30 @@
     ],
     "script_title": "秋季校园咖啡新品推广｜精简版脚本"
   },
-  "rejected": [],
+  "rejected": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    }
+  ],
   "last_observation": {
     "status": "ok",
-    "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入",
+    "summary": "方案已保存 plan_aa0a4621d5（8.0 模拟单位）",
     "data": {
       "plan_id": "plan_aa0a4621d5",
-      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
-      "deduped": true,
-      "saved_at": "2026-10-28 16:05:16"
+      "path": "data/saved_plans/case-10/plan_aa0a4621d5.json",
+      "deduped": false,
+      "saved_at": "2026-10-28 16:25:34"
     },
     "error": null,
     "tool": "save_plan"
   },
   "saved_plan": {
     "plan_id": "plan_aa0a4621d5",
-    "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
-    "deduped": true
+    "path": "data/saved_plans/case-10/plan_aa0a4621d5.json",
+    "deduped": false
   },
   "artifacts": {
     "materials": [
@@ -159,7 +166,7 @@
     "max_steps": 12,
     "tool_calls": 6,
     "max_tool_calls": 12,
-    "elapsed_ms": 201
+    "elapsed_ms": 274
   },
   "steps_brief": [
     {
@@ -196,7 +203,7 @@
       "step": 6,
       "action": "save_plan",
       "status": "ok",
-      "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入"
+      "summary": "方案已保存 plan_aa0a4621d5（8.0 模拟单位）"
     },
     {
       "step": 7,

@@ -219,12 +219,20 @@
       },
       "save_plan": {
         "plan_id": "plan_aa0a4621d5",
-        "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
-        "deduped": true,
-        "saved_at": "2026-10-28 16:05:16"
+        "path": "data/saved_plans/case-10/plan_aa0a4621d5.json",
+        "deduped": false,
+        "saved_at": "2026-10-28 16:25:34"
       }
     }
   },
+  "rejected_auto": [
+    {
+      "variant": "full",
+      "reason": "费用 12.0 超预算 10.0",
+      "cost": 12.0,
+      "minutes": 12
+    }
+  ],
   "status": "COMPLETED",
   "status_reason": "方案已保存 plan_aa0a4621d5",
   "steps": [
@@ -266,7 +274,7 @@
         "error": null,
         "tool": "list_plan_variants"
       },
-      "elapsed_ms": 38,
+      "elapsed_ms": 40,
       "follow_up": "estimate_cost"
     },
     {
@@ -462,7 +470,7 @@
         "error": null,
         "tool": "estimate_cost"
       },
-      "elapsed_ms": 24,
+      "elapsed_ms": 62,
       "follow_up": "search_materials"
     },
     {
@@ -515,7 +523,7 @@
         "error": null,
         "tool": "search_materials"
       },
-      "elapsed_ms": 23,
+      "elapsed_ms": 47,
       "follow_up": "generate_script"
     },
     {
@@ -614,17 +622,17 @@
       "decision_basis": "脚本已生成，保存方案",
       "observation": {
         "status": "ok",
-        "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入",
+        "summary": "方案已保存 plan_aa0a4621d5（8.0 模拟单位）",
         "data": {
           "plan_id": "plan_aa0a4621d5",
-          "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
-          "deduped": true,
-          "saved_at": "2026-10-28 16:05:16"
+          "path": "data/saved_plans/case-10/plan_aa0a4621d5.json",
+          "deduped": false,
+          "saved_at": "2026-10-28 16:25:34"
         },
         "error": null,
         "tool": "save_plan"
       },
-      "elapsed_ms": 36,
+      "elapsed_ms": 22,
       "follow_up": "finish"
     },
     {
@@ -646,12 +654,12 @@
   "resumed_from": 0,
   "last_observation": {
     "status": "ok",
-    "summary": "方案 plan_aa0a4621d5 已存在，命中幂等保存，未重复写入",
+    "summary": "方案已保存 plan_aa0a4621d5（8.0 模拟单位）",
     "data": {
       "plan_id": "plan_aa0a4621d5",
-      "path": "C:\\Users\\admin\\WorkBuddy\\Daily\\xiaoying-agent\\data\\saved_plans\\plan_aa0a4621d5.json",
-      "deduped": true,
-      "saved_at": "2026-10-28 16:05:16"
+      "path": "data/saved_plans/case-10/plan_aa0a4621d5.json",
+      "deduped": false,
+      "saved_at": "2026-10-28 16:25:34"
     },
     "error": null,
     "tool": "save_plan"
